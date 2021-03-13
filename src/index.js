@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Etebase from 'etebase';
-import Home from './app/components/Home';
+import Home from './components/Home';
 
 ReactDOM.render(
   <Home />,
