@@ -1,0 +1,23 @@
+{
+  "name": "securephotoalbum",
+  "version": "1.0.0",
+  "description": "Secure Photo Album is an end-to-end encrypted service that allows users to securely share photos with friends and family. It utilizes Etebase, an SDK developed by EteSync which ensures that users are in complete control of their data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "start-dev": "webpack -w & nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-official:zoranbajic/securephotoalbum.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0"
+  }
+}
