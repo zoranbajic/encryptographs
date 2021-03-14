@@ -1,9 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Etebase from 'etebase';
-import Home from './components/Home';
+import App from './components/App';
+import Login from './components/Login';
+import store from './store';
+import { Provider } from 'react-redux';
 
 ReactDOM.render(
-  <Home />,
-  document.getElementById('app') // make sure this is the same as the id of the div in your index.html
+  <Provider store={store}>
+    <Login />
+  </Provider>,
+  document.getElementById('app') // make sure this is the same as the id of the div in the index.html
 );
