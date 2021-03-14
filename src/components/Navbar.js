@@ -39,7 +39,9 @@ export default function Navbar() {
             Encryptographs
           </Typography>
           <Button color='inherit'>Signup</Button>
-          <Button color='inherit'>Login</Button>
+          <Button color='inherit' component={Link} to={'/login'}>
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
