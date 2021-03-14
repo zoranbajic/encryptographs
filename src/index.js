@@ -4,7 +4,7 @@ import * as Etebase from 'etebase';
 import App from './app';
 import store from './store';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 ReactDOM.render(
   <Provider store={store}>
