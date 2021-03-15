@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-import { Link as RouterLink } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -47,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Signup() {
   const classes = useStyles();
 
   return (
@@ -58,7 +57,7 @@ export default function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign in
+          Sign Up
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -66,10 +65,10 @@ export default function Login() {
             margin='normal'
             required
             fullWidth
-            id='username'
+            id='email'
             label='Username'
-            name='username'
-            autoComplete='username'
+            name='email'
+            autoComplete='email'
             autoFocus
           />
           <TextField
@@ -83,6 +82,17 @@ export default function Login() {
             id='password'
             autoComplete='current-password'
           />
+          <TextField
+            variant='outlined'
+            margin='normal'
+            required
+            fullWidth
+            name='password'
+            label='Confirm Password'
+            type='password'
+            id='confirmPassword'
+            autoComplete='current-password'
+          />
           <FormControlLabel
             control={<Checkbox value='remember' color='primary' />}
             label='Remember me'
@@ -94,20 +104,8 @@ export default function Login() {
             color='primary'
             className={classes.submit}
           >
-            Sign In
+            Sign Up
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href='#' variant='body2'>
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link component={RouterLink} to='/signup'>
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
       <Box mt={8}>

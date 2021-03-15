@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -25,7 +26,7 @@ export default function Navbar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position='static'>
+      <AppBar position='static' style={{ position: 'fixed', top: 0, left: 0 }}>
         <Toolbar>
           <IconButton
             edge='start'
@@ -35,11 +36,17 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography variant='h6' className={classes.title}>
-            Encryptographs
+            <Link color='inherit' component={RouterLink} to={'/'}>
+              Encryptographs
+            </Link>
           </Typography>
-          <Button color='inherit'>Signup</Button>
-          <Button color='inherit' component={Link} to={'/login'}>
+
+          <Button color='inherit' component={RouterLink} to={'/signup'}>
+            Signup
+          </Button>
+          <Button color='inherit' component={RouterLink} to={'/login'}>
             Login
           </Button>
         </Toolbar>
