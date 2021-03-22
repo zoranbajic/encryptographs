@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as Etebase from 'etebase';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -47,8 +48,47 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Signup() {
+  const serverUrl = 'https://api.etebase.com/developer/javascript_developer/';
   const classes = useStyles();
-
+  const [data, setData] = useState({
+    username: '',
+    password: '',
+    confirmPassword: '',
+  });
+  async function Submit(evt) {
+    // Prevent the default action of refreshing the page
+    evt.preventDefault();
+    const formData = {
+      username: data.username,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    };
+    if (formData.confirmPassword !== formData.password) {
+      alert('Your passwords do not match');
+    }
+    console.log(`Your username is: ${formData.username}`);
+    console.log(`Your password is: ${formData.password}`);
+    console.log(`Your password confirmation is: ${formData.confirmPassword}`);
+    const eteBaseUser = await Etebase.Account.signup(
+      {
+        username: formData.username,
+        email: 'testUserOne@email.com',
+      },
+      formData.password,
+      serverUrl
+    );
+    console.log(`Server response: ${eteBaseUser}`);
+    // Clear the inputs after the button is pressed
+    setData({
+      username: '',
+      password: '',
+      confirmPassword: '',
+    });
+  }
+  const handleChange = (evt) => {
+    evt.persist();
+    setData({ ...data, [evt.target.name]: evt.target.value });
+  };
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -59,16 +99,19 @@ export default function Signup() {
         <Typography component='h1' variant='h5'>
           Sign Up
         </Typography>
-        <form className={classes.form} noValidate>
+        {/* We need to add the onSubmit event listener here */}
+        <form className={classes.form} noValidate onSubmit={Submit}>
           <TextField
             variant='outlined'
             margin='normal'
             required
             fullWidth
-            id='email'
+            id='username'
             label='Username'
-            name='email'
-            autoComplete='email'
+            name='username'
+            onChange={handleChange}
+            value={data.username}
+            autoComplete='username'
             autoFocus
           />
           <TextField
@@ -77,8 +120,10 @@ export default function Signup() {
             required
             fullWidth
             name='password'
+            onChange={handleChange}
             label='Password'
             type='password'
+            value={data.password}
             id='password'
             autoComplete='current-password'
           />
@@ -87,9 +132,11 @@ export default function Signup() {
             margin='normal'
             required
             fullWidth
-            name='password'
+            name='confirmPassword'
+            onChange={handleChange}
             label='Confirm Password'
             type='password'
+            value={data.confirmPassword}
             id='confirmPassword'
             autoComplete='current-password'
           />
