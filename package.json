@@ -43,9 +43,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@babel/eslint-parser": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
     "babel-loader": "^8.1.0",
+    "eslint": "^7.22.0",
     "install": "^0.13.0",
     "npm": "^7.6.3",
     "webpack": "^4.44.2",

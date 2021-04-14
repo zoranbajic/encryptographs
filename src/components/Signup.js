@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import * as secrets from '../secrets';
 
 function Copyright() {
   return (
@@ -48,10 +49,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Signup() {
-  const serverUrl = 'https://api.etebase.com/developer/javascript_developer/';
+  const serverUrl = process.env.SERVER_URL || secrets.SERVER_URL;
   const classes = useStyles();
   const [data, setData] = useState({
     username: '',
+    email: '',
     password: '',
     confirmPassword: '',
   });
@@ -60,27 +62,33 @@ export default function Signup() {
     evt.preventDefault();
     const formData = {
       username: data.username,
+      email: data.email,
       password: data.password,
       confirmPassword: data.confirmPassword,
     };
     if (formData.confirmPassword !== formData.password) {
       alert('Your passwords do not match');
     }
-    console.log(`Your username is: ${formData.username}`);
-    console.log(`Your password is: ${formData.password}`);
-    console.log(`Your password confirmation is: ${formData.confirmPassword}`);
     const eteBaseUser = await Etebase.Account.signup(
       {
         username: formData.username,
-        email: 'testUserOne@email.com',
+        email: formData.email,
       },
       formData.password,
       serverUrl
     );
     console.log(`Server response: ${eteBaseUser}`);
+
+    // Logs in the user
+    const etebase = await Etebase.Account.login(
+      formData.username,
+      formData.password
+    );
+
     // Clear the inputs after the button is pressed
     setData({
       username: '',
+      email: '',
       password: '',
       confirmPassword: '',
     });
@@ -113,6 +121,18 @@ export default function Signup() {
             value={data.username}
             autoComplete='username'
             autoFocus
+          />
+          <TextField
+            variant='outlined'
+            margin='normal'
+            required
+            fullWidth
+            name='email'
+            onChange={handleChange}
+            label='Email'
+            type='email'
+            value={data.email}
+            id='email'
           />
           <TextField
             variant='outlined'
