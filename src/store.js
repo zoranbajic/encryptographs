@@ -1,3 +1,20 @@
+import React, { useState } from 'react';
+
+export const UserContext = React.createContext(null);
+
+const Store = ({ children }) => {
+  const initialUserState = '';
+  const [user, setUser] = useState(initialUserState);
+
+  return (
+    <UserContext.Provider value={[user, setUser]}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+export default Store;
+
 // // This is where we create the store for our app
 
 // import { createStore, applyMiddleware } from 'redux';

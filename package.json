@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "PORT=5000 react-scripts start"
+    "start": "BROWSER=none PORT=5000 react-scripts start"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "etebase": "^0.42.0",
     "node-fetch": "^2.6.1",
     "react": "^17.0.1",

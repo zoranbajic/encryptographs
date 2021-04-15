@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import * as Etebase from 'etebase';
+import * as secrets from '../secrets';
+import { UserContext } from '../store';
 import Avatar from '@material-ui/core/Avatar';
+import Backdrop from '@material-ui/core/Backdrop';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { Link as RouterLink } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
 
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
       {'Copyright © '}
-      <Link color='inherit' href='https://material-ui.com/'>
+      <Link color='inherit' href='https://www.encryptographs.com'>
         Encryptographs
       </Link>{' '}
       {new Date().getFullYear()}
@@ -38,6 +49,10 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -48,7 +63,55 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+  // const serverUrl = process.env.SERVER_URL || secrets.SERVER_URL;
+  const serverUrl = 'https://api.etebase.com/developer/javascript_developer/';
   const classes = useStyles();
+  const [user, setUser] = useContext(UserContext);
+  const [showProgress, setShowProgress] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [formInfo, setFormInfo] = useState({
+    username: '',
+    password: '',
+  });
+
+  async function Submit(evt) {
+    let savedSession;
+    try {
+      // Prevent the default action of refreshing the page
+      evt.preventDefault();
+      setShowProgress(true);
+      const formInfoToSubmit = {
+        username: formInfo.username,
+        password: formInfo.password,
+      };
+      console.log('Your username is:', formInfoToSubmit.username);
+      console.log('Your password is:', formInfoToSubmit.password);
+      const etebase = await Etebase.Account.login(
+        formInfoToSubmit.username,
+        formInfoToSubmit.password,
+        serverUrl
+      );
+      savedSession = await etebase.save();
+    } catch (error) {
+      console.log('Your error is', error);
+      setShowProgress(false);
+      setShowError(true);
+    } finally {
+      setShowProgress(false);
+    }
+    console.log('Your saved session is', savedSession);
+  }
+
+  const handleChange = (evt) => {
+    setFormInfo({ ...formInfo, [evt.target.name]: evt.target.value });
+  };
+
+  const handleClose = (evt, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowError(false);
+  };
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -60,7 +123,7 @@ export default function Login() {
         <Typography component='h1' variant='h5'>
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={Submit}>
           <TextField
             variant='outlined'
             margin='normal'
@@ -69,6 +132,8 @@ export default function Login() {
             id='username'
             label='Username'
             name='username'
+            onChange={handleChange}
+            value={formInfo.username}
             autoComplete='username'
             autoFocus
           />
@@ -78,6 +143,8 @@ export default function Login() {
             required
             fullWidth
             name='password'
+            onChange={handleChange}
+            value={formInfo.password}
             label='Password'
             type='password'
             id='password'
@@ -113,6 +180,14 @@ export default function Login() {
       <Box mt={8}>
         <Copyright />
       </Box>
+      <Backdrop className={classes.backdrop} open={showProgress}>
+        <CircularProgress color='primary' />
+      </Backdrop>
+      <Snackbar open={showError} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity='error'>
+          Your username or password is incorrect.
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
