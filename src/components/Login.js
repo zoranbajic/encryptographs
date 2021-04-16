@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import * as Etebase from 'etebase';
-import * as secrets from '../secrets';
+import { SERVER_URL } from '../secrets';
 import { UserContext } from '../store';
 import Avatar from '@material-ui/core/Avatar';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -63,8 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-  // const serverUrl = process.env.SERVER_URL || secrets.SERVER_URL;
-  const serverUrl = 'https://api.etebase.com/developer/javascript_developer/';
+  const serverUrl = process.env.REACT_APP_SERVER_URL;
   const classes = useStyles();
   const [user, setUser] = useContext(UserContext);
   const [showProgress, setShowProgress] = useState(false);
@@ -84,14 +83,13 @@ export default function Login() {
         username: formInfo.username,
         password: formInfo.password,
       };
-      console.log('Your username is:', formInfoToSubmit.username);
-      console.log('Your password is:', formInfoToSubmit.password);
       const etebase = await Etebase.Account.login(
         formInfoToSubmit.username,
         formInfoToSubmit.password,
         serverUrl
       );
       savedSession = await etebase.save();
+      setUser(savedSession);
     } catch (error) {
       console.log('Your error is', error);
       setShowProgress(false);
@@ -99,7 +97,6 @@ export default function Login() {
     } finally {
       setShowProgress(false);
     }
-    console.log('Your saved session is', savedSession);
   }
 
   const handleChange = (evt) => {

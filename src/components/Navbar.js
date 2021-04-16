@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import * as Etebase from 'etebase';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../store';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -22,7 +24,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
+  const [user, setUser] = useContext(UserContext);
   const classes = useStyles();
+
+  useEffect(() => {
+    const loggedInStatus = async (user) => {
+      if (user) {
+        const etebase = await Etebase.Account.restore(user);
+        console.log('The navbar etebase info is', etebase);
+      }
+    };
+    loggedInStatus(user);
+  }, []);
+
+  console.log('The navbar user info is:', user);
 
   return (
     <div className={classes.root}>
