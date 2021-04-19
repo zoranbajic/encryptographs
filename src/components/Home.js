@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../store';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
@@ -13,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
+  const [user, setUser] = useContext(UserContext);
   const classes = useStyles();
   return (
     <Grid container direction='column' align='center'>
@@ -24,7 +26,9 @@ const Home = () => {
         display='flex'
         justify='center'
       >
-        <Typography variant='h2'>Welcome</Typography>
+        <Typography variant='h2'>
+          {user ? `Welcome ${user.user.username}!` : `Welcome`}
+        </Typography>
       </Grid>
     </Grid>
   );
