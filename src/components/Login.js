@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import { SERVER_URL } from '../secrets';
 import { UserContext } from '../store';
@@ -74,6 +75,7 @@ export default function Login() {
     username: '',
     password: '',
   });
+  const history = useHistory();
 
   async function Submit(evt) {
     let savedSession;
@@ -100,10 +102,12 @@ export default function Login() {
     } finally {
       setShowProgress(false);
       if (savedSession) {
+        console.log('Log in was successful!');
         setFormInfo({
           username: '',
           password: '',
         });
+        history.push('/');
       }
     }
   }
