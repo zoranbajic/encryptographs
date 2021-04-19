@@ -1,9 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import * as Etebase from 'etebase';
+import { useHistory } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../store';
+import { UserSessionContext } from '../store';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -25,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
   const [user, setUser] = useContext(UserContext);
+  const [userSession, setUserSession] = useContext(UserSessionContext);
   const classes = useStyles();
 
   useEffect(() => {
@@ -34,8 +37,19 @@ export default function Navbar() {
         console.log('The navbar etebase info is', etebase);
       }
     };
+    console.log('The use effect ran', user);
     loggedInStatus(user);
   }, []);
+
+  const history = useHistory();
+  async function Logout() {
+    console.log('The logout button was clicked');
+    console.log('The user is', user);
+    await user.logout();
+    setUser('');
+    setUserSession('');
+    history.push('/');
+  }
 
   console.log('The navbar user info is:', user);
 
@@ -57,13 +71,22 @@ export default function Navbar() {
               Encryptographs
             </Link>
           </Typography>
-
-          <Button color='inherit' component={RouterLink} to={'/signup'}>
-            Signup
-          </Button>
-          <Button color='inherit' component={RouterLink} to={'/login'}>
-            Login
-          </Button>
+          {!userSession ? (
+            <div>
+              <Button color='inherit' component={RouterLink} to={'/signup'}>
+                Signup
+              </Button>
+              <Button color='inherit' component={RouterLink} to={'/login'}>
+                Login
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <Button color='inherit' onClick={Logout}>
+                Logout
+              </Button>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
     </div>

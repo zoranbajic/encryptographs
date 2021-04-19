@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import * as Etebase from 'etebase';
 import { SERVER_URL } from '../secrets';
 import { UserContext } from '../store';
+import { UserSessionContext } from '../store';
 import Avatar from '@material-ui/core/Avatar';
 import Backdrop from '@material-ui/core/Backdrop';
 import Box from '@material-ui/core/Box';
@@ -66,6 +67,7 @@ export default function Login() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const classes = useStyles();
   const [user, setUser] = useContext(UserContext);
+  const [userSession, setUserSession] = useContext(UserSessionContext);
   const [showProgress, setShowProgress] = useState(false);
   const [showError, setShowError] = useState(false);
   const [formInfo, setFormInfo] = useState({
@@ -89,13 +91,20 @@ export default function Login() {
         serverUrl
       );
       savedSession = await etebase.save();
-      setUser(savedSession);
+      setUserSession(savedSession);
+      setUser(etebase);
     } catch (error) {
       console.log('Your error is', error);
       setShowProgress(false);
       setShowError(true);
     } finally {
       setShowProgress(false);
+      if (savedSession) {
+        setFormInfo({
+          username: '',
+          password: '',
+        });
+      }
     }
   }
 

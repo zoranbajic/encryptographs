@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 
 export const UserContext = React.createContext(null);
+export const UserSessionContext = React.createContext(null);
 
 const Store = ({ children }) => {
   const initialUserState = '';
+  const initialUserSession = '';
   const [user, setUser] = useState(initialUserState);
+  const [userSession, setUserSession] = useState(initialUserSession);
 
   return (
-    <UserContext.Provider value={[user, setUser]}>
-      {children}
-    </UserContext.Provider>
+    <UserSessionContext.Provider value={[userSession, setUserSession]}>
+      <UserContext.Provider value={[user, setUser]}>
+        {children}
+      </UserContext.Provider>
+    </UserSessionContext.Provider>
   );
 };
 
