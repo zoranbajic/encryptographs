@@ -26,25 +26,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
+  // Pull in our state from Context
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
   const classes = useStyles();
 
   useEffect(() => {
-    const loggedInStatus = async (user) => {
-      if (user) {
-        const etebase = await Etebase.Account.restore(user);
-        console.log('The navbar etebase info is', etebase);
-      }
-    };
-    console.log('The use effect ran', user);
-    loggedInStatus(user);
-  }, []);
+    console.log('The user in the navbar is:', user);
+    // const loggedInStatus = async (userSession) => {
+    //   if (userSession) {
+    //     const etebase = await Etebase.Account.restore(userSession);
+    //     console.log('The navbar etebase info is', etebase);
+    //   }
+    // };
+    console.log('The navbar session is', userSession);
+    // loggedInStatus(userSession);
+  });
 
   const history = useHistory();
   async function Logout() {
-    console.log('The logout button was clicked');
-    console.log('The user is', user);
     await user.logout();
     setUser('');
     setUserSession('');

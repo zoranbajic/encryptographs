@@ -97,7 +97,6 @@ export default function Login() {
       setUser(etebase);
     } catch (error) {
       console.log('Your error is', error);
-      setShowProgress(false);
       setShowError(true);
     } finally {
       setShowProgress(false);

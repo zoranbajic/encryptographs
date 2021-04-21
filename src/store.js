@@ -1,13 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import * as Etebase from 'etebase';
 
-export const UserContext = React.createContext(null);
-export const UserSessionContext = React.createContext(null);
+export const UserContext = React.createContext();
+export const UserSessionContext = React.createContext();
+
+const loggedInStatus = (userSession) => {
+  let theResponse = '';
+  if (userSession) {
+    const etebase = Etebase.Account.restore(userSession);
+    console.log('The store etebase info is', etebase);
+    theResponse = etebase;
+  }
+  console.log('The response in the store is', theResponse);
+  return theResponse;
+};
+
+console.log('The store is run.');
 
 const Store = ({ children }) => {
-  const initialUserState = '';
+  const initialUser = '';
   const initialUserSession = '';
-  const [user, setUser] = useState(initialUserState);
-  const [userSession, setUserSession] = useState(initialUserSession);
+
+  const localSession = JSON.parse(sessionStorage.getItem('sessionInfo'));
+
+  const [userSession, setUserSession] = useState(
+    localSession || initialUserSession
+  );
+  console.log('The store user session is', userSession);
+  const [user, setUser] = useState(loggedInStatus(userSession)) || initialUser;
+
+  useEffect(() => {
+    sessionStorage.setItem('sessionInfo', JSON.stringify(userSession));
+  }, [userSession]);
 
   return (
     <UserSessionContext.Provider value={[userSession, setUserSession]}>

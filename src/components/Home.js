@@ -16,6 +16,8 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
   const [user, setUser] = useContext(UserContext);
   const classes = useStyles();
+
+  console.log('The user at home is', user);
   return (
     <Grid container direction='column' align='center'>
       <Grid
@@ -27,7 +29,9 @@ const Home = () => {
         justify='center'
       >
         <Typography variant='h2'>
-          {user ? `Welcome ${user.user.username}!` : `Welcome`}
+          {Object.keys(user).length
+            ? `Welcome ${user.user.username}!`
+            : `Welcome`}
         </Typography>
       </Grid>
     </Grid>
