@@ -106,13 +106,12 @@ export default function Login() {
     } finally {
       // Hide the progress dialog
       setShowProgress(false);
+      // If log in was successful clear the form and go back to the home page
       if (savedSession) {
-        console.log('Log in was successful!');
         setFormInfo({
           username: '',
           password: '',
         });
-        console.log('Login: We get pushed back to the home page');
         history.push('/');
       }
     }
