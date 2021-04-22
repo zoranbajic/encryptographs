@@ -8,11 +8,9 @@ import Avatar from '@material-ui/core/Avatar';
 import Backdrop from '@material-ui/core/Backdrop';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import { Link as RouterLink } from 'react-router-dom';
@@ -82,27 +80,31 @@ export default function Login() {
     try {
       // Prevent the default action of refreshing the page
       evt.preventDefault();
+      // Show the loading dialog
       setShowProgress(true);
+
       const formInfoToSubmit = {
         username: formInfo.username,
         password: formInfo.password,
       };
+
+      // Log in with the given information
       const etebase = await Etebase.Account.login(
         formInfoToSubmit.username,
         formInfoToSubmit.password,
         serverUrl
       );
+
+      // Save the session and assign it and the user to the respective state
+      // values
       savedSession = await etebase.save();
-      console.log('Login: The session is saved and is about to be set');
       setUserSession(savedSession);
-      console.log(
-        'Login: The session has been set and now the user will be set'
-      );
       setUser(etebase);
     } catch (error) {
       console.log('Your error is', error);
       setShowError(true);
     } finally {
+      // Hide the progress dialog
       setShowProgress(false);
       if (savedSession) {
         console.log('Log in was successful!');
@@ -164,10 +166,6 @@ export default function Login() {
             id='password'
             autoComplete='current-password'
           />
-          <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
-            label='Remember me'
-          />
           <Button
             type='submit'
             fullWidth
@@ -177,12 +175,7 @@ export default function Login() {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href='#' variant='body2'>
-                Forgot password?
-              </Link>
-            </Grid>
+          <Grid container justify='center'>
             <Grid item>
               <Link component={RouterLink} to='/signup'>
                 {"Don't have an account? Sign Up"}

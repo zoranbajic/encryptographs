@@ -69,6 +69,7 @@ export default function Signup() {
     if (formData.confirmPassword !== formData.password) {
       alert('Your passwords do not match');
     }
+    // Creates the account
     const eteBaseUser = await Etebase.Account.signup(
       {
         username: formData.username,
@@ -77,7 +78,6 @@ export default function Signup() {
       formData.password,
       serverUrl
     );
-    console.log(`Server response: ${eteBaseUser}`);
 
     // Logs in the user
     const etebase = await Etebase.Account.login(
@@ -114,12 +114,12 @@ export default function Signup() {
             margin='normal'
             required
             fullWidth
-            id='username'
-            label='Username'
-            name='username'
+            name='email'
             onChange={handleChange}
-            value={data.username}
-            autoComplete='username'
+            label='Email'
+            type='email'
+            value={data.email}
+            id='email'
             autoFocus
           />
           <TextField
@@ -127,12 +127,12 @@ export default function Signup() {
             margin='normal'
             required
             fullWidth
-            name='email'
+            id='username'
+            label='Username'
+            name='username'
             onChange={handleChange}
-            label='Email'
-            type='email'
-            value={data.email}
-            id='email'
+            value={data.username}
+            autoComplete='username'
           />
           <TextField
             variant='outlined'
@@ -159,10 +159,6 @@ export default function Signup() {
             value={data.confirmPassword}
             id='confirmPassword'
             autoComplete='current-password'
-          />
-          <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
-            label='Remember me'
           />
           <Button
             type='submit'
