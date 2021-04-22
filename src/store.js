@@ -8,7 +8,12 @@ const Store = ({ children }) => {
   const initialUser = '';
   const initialUserSession = '';
 
+  // Pulls the session ID from sessionStorage (if it exists)
   const localSession = JSON.parse(sessionStorage.getItem('sessionInfo'));
+
+  // If a session ID exists (the user is already logged in), we set the
+  // userSession to that value. If it doesn't (it's falsy), we set userSession
+  // to an empty string
   const [userSession, setUserSession] = useState(
     localSession || initialUserSession
   );
@@ -16,14 +21,19 @@ const Store = ({ children }) => {
   const [user, setUser] = useState(initialUser);
 
   useEffect(() => {
+    // Creates a key in sessionStorage with the session ID
+    // This is run any time the userSession state value changes
     sessionStorage.setItem('sessionInfo', JSON.stringify(userSession));
-    const loggedInStatus = async (userSession) => {
+
+    // If a session ID exists and the user state value is falsy, we pull the
+    // user from the server and set the state value to that user
+    const loggedInUser = async (userSession) => {
       if (userSession && !user) {
-        const etebase = await Etebase.Account.restore(userSession);
-        setUser(etebase);
+        const currentUser = await Etebase.Account.restore(userSession);
+        setUser(currentUser);
       }
     };
-    loggedInStatus(userSession);
+    loggedInUser(userSession);
   }, [userSession]);
 
   return (
