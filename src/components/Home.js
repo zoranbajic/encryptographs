@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from '../store';
+import { UserContext, UserSessionContext } from '../store';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
@@ -15,9 +15,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
   const [user, setUser] = useContext(UserContext);
+  const [userSession, setUserSession] = useContext(UserSessionContext);
   const classes = useStyles();
 
-  console.log('The user at home is', user);
   return (
     <Grid container direction='column' align='center'>
       <Grid
@@ -29,9 +29,8 @@ const Home = () => {
         justify='center'
       >
         <Typography variant='h2'>
-          {Object.keys(user).length
-            ? `Welcome ${user.user.username}!`
-            : `Welcome`}
+          {/* {Object.keys(user).length */}
+          {userSession && user ? `Welcome ${user.user.username}!` : `Welcome`}
         </Typography>
       </Grid>
     </Grid>

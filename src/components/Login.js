@@ -93,7 +93,11 @@ export default function Login() {
         serverUrl
       );
       savedSession = await etebase.save();
+      console.log('Login: The session is saved and is about to be set');
       setUserSession(savedSession);
+      console.log(
+        'Login: The session has been set and now the user will be set'
+      );
       setUser(etebase);
     } catch (error) {
       console.log('Your error is', error);
@@ -106,6 +110,7 @@ export default function Login() {
           username: '',
           password: '',
         });
+        console.log('Login: We get pushed back to the home page');
         history.push('/');
       }
     }

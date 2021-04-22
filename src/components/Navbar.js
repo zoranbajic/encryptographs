@@ -31,27 +31,13 @@ export default function Navbar() {
   const [userSession, setUserSession] = useContext(UserSessionContext);
   const classes = useStyles();
 
-  useEffect(() => {
-    console.log('The user in the navbar is:', user);
-    // const loggedInStatus = async (userSession) => {
-    //   if (userSession) {
-    //     const etebase = await Etebase.Account.restore(userSession);
-    //     console.log('The navbar etebase info is', etebase);
-    //   }
-    // };
-    console.log('The navbar session is', userSession);
-    // loggedInStatus(userSession);
-  });
-
   const history = useHistory();
   async function Logout() {
     await user.logout();
-    setUser('');
     setUserSession('');
+    setUser('');
     history.push('/');
   }
-
-  console.log('The navbar user info is:', user);
 
   return (
     <div className={classes.root}>
