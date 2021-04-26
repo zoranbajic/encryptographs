@@ -99,6 +99,7 @@ export default function Login() {
       // values
       savedSession = await etebase.save();
       setUserSession(savedSession);
+      console.log('Login: The user object is', etebase);
       setUser(etebase);
     } catch (error) {
       console.log('Your error is', error);

@@ -9,8 +9,8 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../store';
 import Container from '@material-ui/core/Container';
-import * as secrets from '../secrets';
 
 function Copyright() {
   return (
@@ -45,55 +45,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Signup() {
+export default function ChangePassword() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const classes = useStyles();
-  const [data, setData] = useState({
-    username: '',
-    email: '',
+  const [formInfo, setFormInfo] = useState({
     password: '',
-    confirmPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
   });
+
   async function Submit(evt) {
-    // Prevent the default action of refreshing the page
-    evt.preventDefault();
-    const formData = {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-    };
-    if (formData.confirmPassword !== formData.password) {
-      alert('Your passwords do not match');
+    try {
+      evt.preventDefault();
+      setShowProgress(true);
+
+      const etebase = await Etebase.Account.login(
+        formInfoToSubmit.username,
+        formInfoToSubmit.password,
+        serverUrl
+      );
+    } catch (error) {
+      console.log('Your error is', error);
+      // Show error message if passwords do not match
+      setShowError(true);
+    } finally {
+      setShowProgress(false);
     }
-    // Creates the account
-    const eteBaseUser = await Etebase.Account.signup(
-      {
-        username: formData.username,
-        email: formData.email,
-      },
-      formData.password,
-      serverUrl
-    );
-
-    // Logs in the user
-    const etebase = await Etebase.Account.login(
-      formData.username,
-      formData.password
-    );
-
-    // Clear the inputs after the button is pressed
-    setData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
   }
-  const handleChange = (evt) => {
-    evt.persist();
-    setData({ ...data, [evt.target.name]: evt.target.value });
-  };
+
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -111,25 +90,13 @@ export default function Signup() {
             margin='normal'
             required
             fullWidth
-            name='email'
+            id='currentPassword'
+            label='Current Password'
+            name='currentPassword'
             onChange={handleChange}
-            label='Email'
-            type='email'
-            value={data.email}
-            id='email'
+            value={data.currentPassword}
+            autoComplete='currentPassword'
             autoFocus
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            onChange={handleChange}
-            value={data.username}
-            autoComplete='username'
           />
           <TextField
             variant='outlined'
