@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
-import { SERVER_URL } from '../secrets';
+import cryptico from 'cryptico';
 import { UserContext } from '../store';
 import { UserSessionContext } from '../store';
 import Avatar from '@material-ui/core/Avatar';
@@ -95,9 +95,14 @@ export default function Login() {
         serverUrl
       );
 
+      // Create encryption key to encrypt the session
+      const RSAkey = cryptico.generateRSAKey(formInfoToSubmit.password, 4096);
+      const encryptionKey = cryptico.publicKeyString(RSAkey);
+      console.log('The encryption key is', encryptionKey);
+
       // Save the session and assign it and the user to the respective state
       // values
-      savedSession = await etebase.save();
+      savedSession = await etebase.save(encryptionKey);
       setUserSession(savedSession);
       console.log('Login: The user object is', etebase);
       setUser(etebase);

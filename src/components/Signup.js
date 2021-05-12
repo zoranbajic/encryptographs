@@ -79,7 +79,8 @@ export default function Signup() {
     // Logs in the user
     const etebase = await Etebase.Account.login(
       formData.username,
-      formData.password
+      formData.password,
+      serverUrl
     );
 
     // Clear the inputs after the button is pressed
