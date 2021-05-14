@@ -29,11 +29,11 @@ const Store = ({ children }) => {
     // user from the server and set the state value to that user
     const loggedInUser = async (userSession) => {
       if (userSession && !user) {
-        const currentUser = await Etebase.Account.restore(userSession);
-        setUser(currentUser);
+        // const currentUser = await Etebase.Account.restore(userSession);
+        setUser(userSession);
       }
     };
-    loggedInUser(userSession);
+    // loggedInUser(userSession);
   }, [userSession]);
 
   return (

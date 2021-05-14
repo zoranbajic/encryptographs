@@ -87,9 +87,14 @@ export default function ConfirmPassword() {
       };
 
       // Decrypt the session and set the User state with it
-      const RSAkey = cryptico.generateRSAKey(formInfoToSubmit.password, 4096);
+      const RSAkey = cryptico.generateRSAKey(formInfoToSubmit.password, 186);
       const encryptionKey = cryptico.publicKeyString(RSAkey);
-      console.log('The encryption key is', encryptionKey);
+      console.log('ConfirmPassword: The encryption key is', encryptionKey);
+      const currentUser = await Etebase.Account.restore(
+        userSession,
+        encryptionKey
+      );
+      setUser(currentUser);
     } catch (error) {
       console.log('Your error is', error);
       setShowError(true);
@@ -119,7 +124,7 @@ export default function ConfirmPassword() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign in
+          Confirm your password
         </Typography>
         <form className={classes.form} onSubmit={Submit}>
           <TextField
