@@ -11,9 +11,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-import { Link as RouterLink } from 'react-router-dom';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -90,20 +88,19 @@ export default function ConfirmPassword() {
       // Decrypt the session and set the User state with it
       const RSAkey = cryptico.generateRSAKey(formInfoToSubmit.password, 186);
       const encryptionKey = cryptico.publicKeyString(RSAkey);
-      console.log('ConfirmPassword: The encryption key is', encryptionKey);
       currentUser = await Etebase.Account.restore(userSession, encryptionKey);
-      // setUser(currentUser);
     } catch (error) {
-      console.log('Your error is', error);
       setShowError(true);
     } finally {
       // Hide the progress dialog
       setShowProgress(false);
-      // If password was not successful, logout the user
+      // If password is correct, set the user. If not, logout the user
       if (currentUser) {
-        console.log('Confirm Password: The current user is', currentUser);
         setUser(currentUser);
       } else {
+        alert(
+          'Your password was not correct. You will now be logged out and returned to the home screen'
+        );
         setUserSession('');
         history.push('/');
       }

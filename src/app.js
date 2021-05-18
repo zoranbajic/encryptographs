@@ -7,8 +7,6 @@ import Routes from './routes';
 export default function App() {
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
-  console.log('App: The user is', user);
-  console.log('App: The user session is', userSession);
   if (userSession && !user) {
     return (
       <div>
