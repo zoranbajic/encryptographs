@@ -103,10 +103,10 @@ export default function Login() {
       // Save the session and assign it and the user to the respective state
       // values
       savedSession = await etebase.save(encryptionKey);
-      console.log('Login: The saved session is:', savedSession);
-      setUserSession(savedSession);
       console.log('Login: The user object is', etebase);
       setUser(etebase);
+      console.log('Login: The saved session is:', savedSession);
+      setUserSession(savedSession);
     } catch (error) {
       console.log('Your error is', error);
       setShowError(true);

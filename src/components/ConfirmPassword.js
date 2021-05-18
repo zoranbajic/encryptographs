@@ -76,6 +76,7 @@ export default function ConfirmPassword() {
 
   async function Submit(evt) {
     let savedSession;
+    let currentUser;
     try {
       // Prevent the default action of refreshing the page
       evt.preventDefault();
@@ -90,11 +91,8 @@ export default function ConfirmPassword() {
       const RSAkey = cryptico.generateRSAKey(formInfoToSubmit.password, 186);
       const encryptionKey = cryptico.publicKeyString(RSAkey);
       console.log('ConfirmPassword: The encryption key is', encryptionKey);
-      const currentUser = await Etebase.Account.restore(
-        userSession,
-        encryptionKey
-      );
-      setUser(currentUser);
+      currentUser = await Etebase.Account.restore(userSession, encryptionKey);
+      // setUser(currentUser);
     } catch (error) {
       console.log('Your error is', error);
       setShowError(true);
@@ -102,6 +100,13 @@ export default function ConfirmPassword() {
       // Hide the progress dialog
       setShowProgress(false);
       // If password was not successful, logout the user
+      if (currentUser) {
+        console.log('Confirm Password: The current user is', currentUser);
+        setUser(currentUser);
+      } else {
+        setUserSession('');
+        history.push('/');
+      }
     }
   }
 
