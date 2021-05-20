@@ -11,9 +11,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-import { Link as RouterLink } from 'react-router-dom';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -62,8 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
-  const serverUrl = process.env.REACT_APP_SERVER_URL;
+export default function ConfirmPassword() {
   const classes = useStyles();
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
@@ -77,6 +74,7 @@ export default function Login() {
 
   async function Submit(evt) {
     let savedSession;
+    let currentUser;
     try {
       // Prevent the default action of refreshing the page
       evt.preventDefault();
@@ -84,39 +82,26 @@ export default function Login() {
       setShowProgress(true);
 
       const formInfoToSubmit = {
-        username: formInfo.username,
         password: formInfo.password,
       };
 
-      // Log in with the given information
-      const etebase = await Etebase.Account.login(
-        formInfoToSubmit.username,
-        formInfoToSubmit.password,
-        serverUrl
-      );
-
-      // Create encryption key to encrypt the session
+      // Decrypt the session and set the User state with it
       const RSAkey = cryptico.generateRSAKey(formInfoToSubmit.password, 186);
       const encryptionKey = cryptico.publicKeyString(RSAkey);
-
-      // Save the session and assign it and the user to the respective state
-      // values
-      savedSession = await etebase.save(encryptionKey);
-      setUser(etebase);
-      setUserSession(savedSession);
-      console.log('Login: Your user is', etebase);
-      console.log('Login: Your username is', etebase.user.username);
+      currentUser = await Etebase.Account.restore(userSession, encryptionKey);
     } catch (error) {
       setShowError(true);
     } finally {
       // Hide the progress dialog
       setShowProgress(false);
-      // If log in was successful clear the form and go back to the home page
-      if (savedSession) {
-        setFormInfo({
-          username: '',
-          password: '',
-        });
+      // If password is correct, set the user. If not, logout the user
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        alert(
+          'Your password was not correct. You will now be logged out and returned to the home screen'
+        );
+        setUserSession('');
         history.push('/');
       }
     }
@@ -141,22 +126,9 @@ export default function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign in
+          Confirm your password
         </Typography>
         <form className={classes.form} onSubmit={Submit}>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            onChange={handleChange}
-            value={formInfo.username}
-            autoComplete='username'
-            autoFocus
-          />
           <TextField
             variant='outlined'
             margin='normal'
@@ -177,15 +149,8 @@ export default function Login() {
             color='primary'
             className={classes.submit}
           >
-            Sign In
+            Confirm Password
           </Button>
-          <Grid container justify='center'>
-            <Grid item>
-              <Link component={RouterLink} to='/signup'>
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
       <Box mt={8}>

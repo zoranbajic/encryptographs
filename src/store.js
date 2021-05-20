@@ -27,13 +27,13 @@ const Store = ({ children }) => {
 
     // If a session ID exists and the user state value is falsy, we pull the
     // user from the server and set the state value to that user
-    const loggedInUser = async (userSession) => {
-      if (userSession && !user) {
-        const currentUser = await Etebase.Account.restore(userSession);
-        setUser(currentUser);
-      }
-    };
-    loggedInUser(userSession);
+    // const loggedInUser = async (userSession) => {
+    //   if (userSession && !user) {
+    //     // const currentUser = await Etebase.Account.restore(userSession);
+    //     setUser(userSession);
+    //   }
+    // };
+    // loggedInUser(userSession);
   }, [userSession]);
 
   return (

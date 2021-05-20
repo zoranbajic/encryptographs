@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import * as Etebase from 'etebase';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -9,8 +9,8 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { UserContext } from '../store';
 import Container from '@material-ui/core/Container';
-import * as secrets from '../secrets';
 
 function Copyright() {
   return (
@@ -45,56 +45,52 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Signup() {
+export default function ChangePassword() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const classes = useStyles();
-  const [data, setData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+  const [user, setUser] = useContext(UserContext);
+  const [showProgress, setShowProgress] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [formInfo, setFormInfo] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmNewPassword: '',
   });
+
   async function Submit(evt) {
-    // Prevent the default action of refreshing the page
-    evt.preventDefault();
-    const formData = {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-    };
-    if (formData.confirmPassword !== formData.password) {
-      alert('Your passwords do not match');
+    try {
+      evt.preventDefault();
+      setShowProgress(true);
+
+      if (formInfo.newPassword === formInfo.confirmNewPassword) {
+        const etebase = await Etebase.Account.login(
+          user.user.username,
+          formInfo.currentPassword,
+          serverUrl
+        );
+        await etebase.changePassword(formInfo.confirmNewPassword);
+      }
+    } catch (error) {
+      console.log('Your error is', error);
+      // Show error message if passwords do not match
+      setShowError(true);
+    } finally {
+      alert('Password Changed!');
+      setShowProgress(false);
     }
-    // Creates the account
-    const eteBaseUser = await Etebase.Account.signup(
-      {
-        username: formData.username,
-        email: formData.email,
-      },
-      formData.password,
-      serverUrl
-    );
-
-    // Logs in the user
-    const etebase = await Etebase.Account.login(
-      formData.username,
-      formData.password,
-      serverUrl
-    );
-
-    // Clear the inputs after the button is pressed
-    setData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
   }
+
   const handleChange = (evt) => {
-    evt.persist();
-    setData({ ...data, [evt.target.name]: evt.target.value });
+    setFormInfo({ ...formInfo, [evt.target.name]: evt.target.value });
   };
+
+  const handleClose = (evt, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowError(false);
+  };
+
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -103,7 +99,7 @@ export default function Signup() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign Up
+          Change Password
         </Typography>
         {/* We need to add the onSubmit event listener here */}
         <form className={classes.form} noValidate onSubmit={Submit}>
@@ -112,12 +108,13 @@ export default function Signup() {
             margin='normal'
             required
             fullWidth
-            name='email'
+            id='currentPassword'
+            label='Current Password'
+            type='password'
+            name='currentPassword'
             onChange={handleChange}
-            label='Email'
-            type='email'
-            value={data.email}
-            id='email'
+            value={formInfo.currentPassword}
+            autoComplete='currentPassword'
             autoFocus
           />
           <TextField
@@ -125,38 +122,26 @@ export default function Signup() {
             margin='normal'
             required
             fullWidth
-            id='username'
-            label='Username'
-            name='username'
+            name='newPassword'
             onChange={handleChange}
-            value={data.username}
-            autoComplete='username'
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            onChange={handleChange}
-            label='Password'
+            label='New Password'
             type='password'
-            value={data.password}
-            id='password'
-            autoComplete='current-password'
+            value={formInfo.newPassword}
+            id='newPassword'
+            autoComplete='newPassword'
           />
           <TextField
             variant='outlined'
             margin='normal'
             required
             fullWidth
-            name='confirmPassword'
+            name='confirmNewPassword'
             onChange={handleChange}
             label='Confirm Password'
             type='password'
-            value={data.confirmPassword}
-            id='confirmPassword'
-            autoComplete='current-password'
+            value={formInfo.confirmNewPassword}
+            id='confirmNewPassword'
+            autoComplete='confirmNewPassword'
           />
           <Button
             type='submit'
@@ -165,7 +150,7 @@ export default function Signup() {
             color='primary'
             className={classes.submit}
           >
-            Sign Up
+            Change Password
           </Button>
         </form>
       </div>
