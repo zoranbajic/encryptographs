@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import * as Etebase from 'etebase';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -48,8 +48,11 @@ const useStyles = makeStyles((theme) => ({
 export default function ChangePassword() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
   const classes = useStyles();
+  const [user, setUser] = useContext(UserContext);
+  const [showProgress, setShowProgress] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [formInfo, setFormInfo] = useState({
-    password: '',
+    currentPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   });
@@ -59,19 +62,34 @@ export default function ChangePassword() {
       evt.preventDefault();
       setShowProgress(true);
 
-      const etebase = await Etebase.Account.login(
-        formInfoToSubmit.username,
-        formInfoToSubmit.password,
-        serverUrl
-      );
+      if (formInfo.newPassword === formInfo.confirmNewPassword) {
+        const etebase = await Etebase.Account.login(
+          user.user.username,
+          formInfo.currentPassword,
+          serverUrl
+        );
+        await etebase.changePassword(formInfo.confirmNewPassword);
+      }
     } catch (error) {
       console.log('Your error is', error);
       // Show error message if passwords do not match
       setShowError(true);
     } finally {
+      alert('Password Changed!');
       setShowProgress(false);
     }
   }
+
+  const handleChange = (evt) => {
+    setFormInfo({ ...formInfo, [evt.target.name]: evt.target.value });
+  };
+
+  const handleClose = (evt, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowError(false);
+  };
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -81,7 +99,7 @@ export default function ChangePassword() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component='h1' variant='h5'>
-          Sign Up
+          Change Password
         </Typography>
         {/* We need to add the onSubmit event listener here */}
         <form className={classes.form} noValidate onSubmit={Submit}>
@@ -92,9 +110,10 @@ export default function ChangePassword() {
             fullWidth
             id='currentPassword'
             label='Current Password'
+            type='password'
             name='currentPassword'
             onChange={handleChange}
-            value={data.currentPassword}
+            value={formInfo.currentPassword}
             autoComplete='currentPassword'
             autoFocus
           />
@@ -103,26 +122,26 @@ export default function ChangePassword() {
             margin='normal'
             required
             fullWidth
-            name='password'
+            name='newPassword'
             onChange={handleChange}
-            label='Password'
+            label='New Password'
             type='password'
-            value={data.password}
-            id='password'
-            autoComplete='current-password'
+            value={formInfo.newPassword}
+            id='newPassword'
+            autoComplete='newPassword'
           />
           <TextField
             variant='outlined'
             margin='normal'
             required
             fullWidth
-            name='confirmPassword'
+            name='confirmNewPassword'
             onChange={handleChange}
             label='Confirm Password'
             type='password'
-            value={data.confirmPassword}
-            id='confirmPassword'
-            autoComplete='current-password'
+            value={formInfo.confirmNewPassword}
+            id='confirmNewPassword'
+            autoComplete='confirmNewPassword'
           />
           <Button
             type='submit'
@@ -131,7 +150,7 @@ export default function ChangePassword() {
             color='primary'
             className={classes.submit}
           >
-            Sign Up
+            Change Password
           </Button>
         </form>
       </div>

@@ -86,7 +86,7 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
+      <MenuItem onClick={ChangePassword}>Change Password</MenuItem>
       <MenuItem onClick={Logout}>Logout</MenuItem>
     </Menu>
   );
@@ -131,12 +131,18 @@ export default function Navbar() {
   const [userSession, setUserSession] = useContext(UserSessionContext);
 
   async function Logout() {
-    setAnchorEl(null);
-    handleMobileMenuClose();
+    // setAnchorEl(null);
+    // handleMobileMenuClose();
+    handleMenuClose();
     await user.logout();
     setUserSession('');
     setUser('');
     history.push('/');
+  }
+
+  function ChangePassword() {
+    handleMenuClose();
+    history.push('/changepassword');
   }
 
   return (

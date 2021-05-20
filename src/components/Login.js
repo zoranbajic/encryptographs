@@ -104,6 +104,8 @@ export default function Login() {
       savedSession = await etebase.save(encryptionKey);
       setUser(etebase);
       setUserSession(savedSession);
+      console.log('Login: Your user is', etebase);
+      console.log('Login: Your username is', etebase.user.username);
     } catch (error) {
       setShowError(true);
     } finally {
