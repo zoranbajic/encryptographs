@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
+import { UserSessionContext } from '../store';
 import Avatar from '@material-ui/core/Avatar';
 import Backdrop from '@material-ui/core/Backdrop';
 import Box from '@material-ui/core/Box';
@@ -54,11 +56,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MyAlbums() {
-  const classes = useSTyles();
+export default function Albums() {
+  const classes = useStyles();
+  const history = useHistory();
+  const [userSession, setUserSession] = useContext(UserSessionContext);
+
+  if (!userSession) {
+    history.push('/login');
+  }
 
   async function CreateAlbum(evt) {
-    alert('This button works!');
+    try {
+      evt.preventDefault();
+      alert('This button works!');
+    } catch (error) {}
   }
 
   return (
@@ -71,7 +82,7 @@ export default function MyAlbums() {
         <Typography component='h1' variant='h5'>
           My Albums
         </Typography>
-        <form className={classes.form} onSubmit={Submit}>
+        <form className={classes.form} onSubmit={CreateAlbum}>
           <Button
             type='submit'
             fullWidth
