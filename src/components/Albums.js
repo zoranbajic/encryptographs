@@ -1,23 +1,31 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
-import { UserSessionContext } from '../store';
-import Avatar from '@material-ui/core/Avatar';
-import Backdrop from '@material-ui/core/Backdrop';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
+import CreateAlbumDialog from './CreateAlbumDialog';
+import { UserContext, UserSessionContext } from '../store';
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  Link,
+  Snackbar,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import PhotoAlbumOutlinedIcon from '@material-ui/icons/PhotoAlbumOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
-import Snackbar from '@material-ui/core/Snackbar';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 
 function Copyright() {
   return (
@@ -59,7 +67,15 @@ const useStyles = makeStyles((theme) => ({
 export default function Albums() {
   const classes = useStyles();
   const history = useHistory();
+  let selectedValue = '';
+  let album = {
+    name: '',
+    description: '',
+  };
+  const [open, setOpen] = useState(false);
+  const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
+  const collectionManager = user.getCollectionManager();
 
   if (!userSession) {
     history.push('/login');
@@ -72,6 +88,20 @@ export default function Albums() {
     } catch (error) {}
   }
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  // This takes in either "Cancel" or "Create" as a value and the boolean
+  // values of the checkboxes in the Checkboxes component which are contained
+  // in an object
+  const handleClose = (value, album) => {
+    // This closes the dialog window
+    setOpen(false);
+    console.log('Albums - Your value is:', value);
+    console.log('Albums - Your album info is:', album);
+  };
+
   return (
     <Container component='main' maxWidth='xs'>
       <CssBaseline />
@@ -82,17 +112,23 @@ export default function Albums() {
         <Typography component='h1' variant='h5'>
           My Albums
         </Typography>
-        <form className={classes.form} onSubmit={CreateAlbum}>
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-          >
-            Create Album
-          </Button>
-        </form>
+        {/* <form className={classes.form} onSubmit={CreateAlbum}> */}
+        <Button
+          fullWidth
+          variant='contained'
+          color='primary'
+          className={classes.submit}
+          onClick={handleClickOpen}
+        >
+          Create Album
+        </Button>
+        <CreateAlbumDialog
+          open={open}
+          onClose={handleClose}
+          selectedValue={selectedValue}
+          album={album}
+        />
+        {/* </form> */}
       </div>
       <Box mt={8}>
         <Copyright />
