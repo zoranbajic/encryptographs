@@ -26,7 +26,6 @@ export default function CreateAlbumDialog(props) {
   });
 
   const handleChange = (evt) => {
-    console.log('CreateAlbumDialog - The handleChange event fired');
     setAlbumInfo({ ...albumInfo, [evt.target.name]: evt.target.value });
   };
 

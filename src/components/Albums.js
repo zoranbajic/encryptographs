@@ -75,6 +75,7 @@ export default function Albums() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
+
   const collectionManager = user.getCollectionManager();
 
   if (!userSession) {
@@ -95,12 +96,23 @@ export default function Albums() {
   // This takes in either "Cancel" or "Create" as a value and the boolean
   // values of the checkboxes in the Checkboxes component which are contained
   // in an object
-  const handleClose = (value, album) => {
+  async function handleClose(value, album) {
     // This closes the dialog window
     setOpen(false);
+    if (value) {
+      const collection = await collectionManager.create(
+        'encryptograph.album',
+        {
+          name: album.name,
+          description: album.description,
+        },
+        '' // Empty content
+      );
+      await collectionManager.upload(collection);
+    }
     console.log('Albums - Your value is:', value);
     console.log('Albums - Your album info is:', album);
-  };
+  }
 
   return (
     <Container component='main' maxWidth='xs'>
