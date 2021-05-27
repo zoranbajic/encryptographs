@@ -82,16 +82,27 @@ export default function Albums() {
     history.push('/login');
   }
 
-  async function CreateAlbum(evt) {
-    try {
-      evt.preventDefault();
-      alert('This button works!');
-    } catch (error) {}
-  }
+  getCollections();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  async function getCollections() {
+    try {
+      const collections = await collectionManager.list('encryptograph.album');
+      const fileCollections = await collectionManager.list(
+        'encryptograph.files'
+      );
+      const firstItem = collections.data[0];
+      const meta = firstItem.getMeta();
+      console.log('Albums: Your first album is this:', firstItem);
+      console.log('Albums: Your file collections are:', fileCollections);
+      console.log('Decoded is', meta);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // This takes in either "Cancel" or "Create" as a value and the boolean
   // values of the checkboxes in the Checkboxes component which are contained
@@ -100,15 +111,22 @@ export default function Albums() {
     // This closes the dialog window
     setOpen(false);
     if (value) {
-      const collection = await collectionManager.create(
-        'encryptograph.album',
-        {
-          name: album.name,
-          description: album.description,
-        },
-        '' // Empty content
-      );
-      await collectionManager.upload(collection);
+      try {
+        const collection = await collectionManager.create(
+          'encryptograph.album',
+          {
+            name: album.name,
+            description: album.description,
+          },
+          '' // Empty content
+        );
+        await collectionManager.upload(collection);
+        console.log('Your collection is', collection);
+      } catch (error) {
+        alert('Some error occurred');
+      } finally {
+        console.log('Albums - Your album was successfully created');
+      }
     }
     console.log('Albums - Your value is:', value);
     console.log('Albums - Your album info is:', album);

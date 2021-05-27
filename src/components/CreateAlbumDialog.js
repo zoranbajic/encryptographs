@@ -89,7 +89,7 @@ export default function CreateAlbumDialog(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleButtonClick('Cancel')} color='primary'>
+          <Button onClick={() => handleButtonClick()} color='primary'>
             Cancel
           </Button>
           <Button onClick={() => handleButtonClick('Create')} color='primary'>
