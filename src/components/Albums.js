@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
-import CreateAlbumDialog from './CreateAlbumDialog';
+import { AlbumCard, CreateAlbumDialog } from '../components';
 import { UserContext, UserSessionContext } from '../store';
 import {
   Avatar,
@@ -18,6 +18,7 @@ import {
   DialogTitle,
   Grid,
   Link,
+  Paper,
   Snackbar,
   TextField,
   Typography,
@@ -67,11 +68,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Albums() {
   const classes = useStyles();
   const history = useHistory();
+  let albumCollections = '';
   let selectedValue = '';
   let album = {
     name: '',
     description: '',
   };
+  const [albums, setAlbums] = useState({});
   const [open, setOpen] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
@@ -82,7 +85,25 @@ export default function Albums() {
     history.push('/login');
   }
 
-  getCollections();
+  useEffect(() => {
+    async function getAlbums() {
+      try {
+        albumCollections = await collectionManager.list('encryptograph.album');
+        console.log('Albums: Your albums are:', albumCollections);
+        for (let i = 0; i < albumCollections.data.length; i++) {
+          console.log(`Album ${i + 1} is:`);
+          console.log('Album', albumCollections.data[i].uid);
+          console.log(albumCollections.data[i].getMeta());
+        }
+        setAlbums(albumCollections);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAlbums();
+  }, []);
+
+  // getCollections();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -90,15 +111,19 @@ export default function Albums() {
 
   async function getCollections() {
     try {
-      const collections = await collectionManager.list('encryptograph.album');
+      albumCollections = await collectionManager.list('encryptograph.album');
       const fileCollections = await collectionManager.list(
         'encryptograph.files'
       );
-      const firstItem = collections.data[0];
-      const meta = firstItem.getMeta();
-      console.log('Albums: Your first album is this:', firstItem);
-      console.log('Albums: Your file collections are:', fileCollections);
-      console.log('Decoded is', meta);
+      console.log('Albums: Your albums are:', albumCollections);
+      for (let i = 0; i < albumCollections.data.length; i++) {
+        console.log(`Album ${i + 1} is:`);
+        console.log(albumCollections.data[i].getMeta());
+      }
+      // const meta = firstItem.getMeta();
+
+      // console.log('Albums: Your file collections are:', fileCollections);
+      // console.log('Decoded is', meta);
     } catch (error) {
       console.log(error);
     }
@@ -121,7 +146,6 @@ export default function Albums() {
           '' // Empty content
         );
         await collectionManager.upload(collection);
-        console.log('Your collection is', collection);
       } catch (error) {
         alert('Some error occurred');
       } finally {
@@ -133,37 +157,46 @@ export default function Albums() {
   }
 
   return (
-    <Container component='main' maxWidth='xs'>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <PhotoAlbumOutlinedIcon />
-        </Avatar>
-        <Typography component='h1' variant='h5'>
-          My Albums
-        </Typography>
-        {/* <form className={classes.form} onSubmit={CreateAlbum}> */}
-        <Button
-          fullWidth
-          variant='contained'
-          color='primary'
-          className={classes.submit}
-          onClick={handleClickOpen}
-        >
-          Create Album
-        </Button>
-        <CreateAlbumDialog
-          open={open}
-          onClose={handleClose}
-          selectedValue={selectedValue}
-          album={album}
-        />
-        {/* </form> */}
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-      {/* <Backdrop className={classes.backdrop} open={showProgress}>
+    <div>
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <PhotoAlbumOutlinedIcon />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
+            My Albums
+          </Typography>
+          <Button
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+            onClick={handleClickOpen}
+          >
+            Create Album
+          </Button>
+          <CreateAlbumDialog
+            open={open}
+            onClose={handleClose}
+            selectedValue={selectedValue}
+            album={album}
+          />
+          {/* </form> */}
+        </div>
+        <Grid>
+          {albums.data.map((album) => (
+            <AlbumCard
+              key={album.uid}
+              name={album.getMeta().name}
+              description={album.getMeta().description}
+            />
+          ))}
+        </Grid>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+        {/* <Backdrop className={classes.backdrop} open={showProgress}>
         <CircularProgress color='primary' />
       </Backdrop>
       <Snackbar open={showError} autoHideDuration={6000} onClose={handleClose}>
@@ -171,6 +204,7 @@ export default function Albums() {
           Your username or password is incorrect.
         </Alert>
       </Snackbar> */}
-    </Container>
+      </Container>
+    </div>
   );
 }
