@@ -60,6 +60,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+  gridContainer: {
+    paddingLeft: '40px',
+    paddingRight: '40px',
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -74,7 +78,7 @@ export default function Albums() {
     name: '',
     description: '',
   };
-  const [albums, setAlbums] = useState({});
+  const [albums, setAlbums] = useState();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
@@ -83,6 +87,8 @@ export default function Albums() {
 
   if (!userSession) {
     history.push('/login');
+  } else {
+    console.log('Albums - Your albums are', albums);
   }
 
   useEffect(() => {
@@ -158,45 +164,38 @@ export default function Albums() {
 
   return (
     <div>
-      <Container component='main' maxWidth='xs'>
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <PhotoAlbumOutlinedIcon />
-          </Avatar>
-          <Typography component='h1' variant='h5'>
-            My Albums
-          </Typography>
-          <Button
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-            onClick={handleClickOpen}
-          >
-            Create Album
-          </Button>
-          <CreateAlbumDialog
-            open={open}
-            onClose={handleClose}
-            selectedValue={selectedValue}
-            album={album}
-          />
-          {/* </form> */}
-        </div>
-        <Grid>
-          {albums.data.map((album) => (
-            <AlbumCard
-              key={album.uid}
-              name={album.getMeta().name}
-              description={album.getMeta().description}
+      {!albums ? (
+        <Container component='main' maxWidth='xs'>
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <PhotoAlbumOutlinedIcon />
+            </Avatar>
+            <Typography component='h1' variant='h5'>
+              My Albums
+            </Typography>
+            <Typography>Looks like you don't have any albums.</Typography>
+            <Button
+              fullWidth
+              variant='contained'
+              color='primary'
+              className={classes.submit}
+              onClick={handleClickOpen}
+            >
+              Create Album
+            </Button>
+            <CreateAlbumDialog
+              open={open}
+              onClose={handleClose}
+              selectedValue={selectedValue}
+              album={album}
             />
-          ))}
-        </Grid>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
-        {/* <Backdrop className={classes.backdrop} open={showProgress}>
+            {/* </form> */}
+          </div>
+          <Box mt={8}>
+            <Copyright />
+          </Box>
+          {/* <Backdrop className={classes.backdrop} open={showProgress}>
         <CircularProgress color='primary' />
       </Backdrop>
       <Snackbar open={showError} autoHideDuration={6000} onClose={handleClose}>
@@ -204,7 +203,48 @@ export default function Albums() {
           Your username or password is incorrect.
         </Alert>
       </Snackbar> */}
-      </Container>
+        </Container>
+      ) : (
+        <div>
+          <Container component='main'>
+            <CssBaseline />
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <PhotoAlbumOutlinedIcon />
+              </Avatar>
+              <Typography component='h1' variant='h5' gutterBottom>
+                My Albums
+              </Typography>
+              <Grid container className={classes.gridContainer} spacing={4}>
+                {albums.data.map((album) => (
+                  <AlbumCard
+                    key={album.uid}
+                    name={album.getMeta().name}
+                    description={album.getMeta().description}
+                  />
+                ))}
+              </Grid>
+              <Button
+                variant='contained'
+                color='primary'
+                className={classes.submit}
+                onClick={handleClickOpen}
+              >
+                Create Album
+              </Button>
+              <CreateAlbumDialog
+                open={open}
+                onClose={handleClose}
+                selectedValue={selectedValue}
+                album={album}
+              />
+            </div>
+          </Container>
+          <Box mt={8}>
+            <Copyright />
+          </Box>
+        </div>
+      )}
     </div>
   );
 }
