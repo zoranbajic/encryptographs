@@ -92,48 +92,49 @@ export default function Albums() {
   }
 
   useEffect(() => {
-    async function getAlbums() {
-      try {
-        albumCollections = await collectionManager.list('encryptograph.album');
-        console.log('Albums: Your albums are:', albumCollections);
-        for (let i = 0; i < albumCollections.data.length; i++) {
-          console.log(`Album ${i + 1} is:`);
-          console.log('Album', albumCollections.data[i].uid);
-          console.log(albumCollections.data[i].getMeta());
-        }
-        setAlbums(albumCollections);
-      } catch (error) {
-        console.log(error);
-      }
-    }
     getAlbums();
   }, []);
 
   // getCollections();
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  async function getCollections() {
+  async function getAlbums() {
     try {
       albumCollections = await collectionManager.list('encryptograph.album');
-      const fileCollections = await collectionManager.list(
-        'encryptograph.files'
-      );
       console.log('Albums: Your albums are:', albumCollections);
       for (let i = 0; i < albumCollections.data.length; i++) {
         console.log(`Album ${i + 1} is:`);
+        console.log('Album', albumCollections.data[i].uid);
         console.log(albumCollections.data[i].getMeta());
       }
-      // const meta = firstItem.getMeta();
-
-      // console.log('Albums: Your file collections are:', fileCollections);
-      // console.log('Decoded is', meta);
+      setAlbums(albumCollections);
     } catch (error) {
       console.log(error);
     }
   }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  // async function getCollections() {
+  //   try {
+  //     albumCollections = await collectionManager.list('encryptograph.album');
+  //     const fileCollections = await collectionManager.list(
+  //       'encryptograph.files'
+  //     );
+  //     console.log('Albums: Your albums are:', albumCollections);
+  //     for (let i = 0; i < albumCollections.data.length; i++) {
+  //       console.log(`Album ${i + 1} is:`);
+  //       console.log(albumCollections.data[i].getMeta());
+  //     }
+  //     // const meta = firstItem.getMeta();
+
+  //     // console.log('Albums: Your file collections are:', fileCollections);
+  //     // console.log('Decoded is', meta);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   // This takes in either "Cancel" or "Create" as a value and the boolean
   // values of the checkboxes in the Checkboxes component which are contained
@@ -156,6 +157,7 @@ export default function Albums() {
         alert('Some error occurred');
       } finally {
         console.log('Albums - Your album was successfully created');
+        getAlbums();
       }
     }
     console.log('Albums - Your value is:', value);
