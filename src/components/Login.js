@@ -2,8 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import cryptico from 'cryptico';
-import { UserContext } from '../store';
-import { UserSessionContext } from '../store';
+import { UserContext, UserSessionContext } from '../store';
 import Avatar from '@material-ui/core/Avatar';
 import Backdrop from '@material-ui/core/Backdrop';
 import Box from '@material-ui/core/Box';
@@ -117,7 +116,7 @@ export default function Login() {
           username: '',
           password: '',
         });
-        history.push('/');
+        history.push('/albums');
       }
     }
   }
@@ -179,7 +178,7 @@ export default function Login() {
           >
             Sign In
           </Button>
-          <Grid container justify='center'>
+          <Grid container justifyContent='center'>
             <Grid item>
               <Link component={RouterLink} to='/signup'>
                 {"Don't have an account? Sign Up"}
