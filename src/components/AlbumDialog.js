@@ -17,20 +17,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CreateAlbumDialog(props) {
+export default function AlbumDialog(props) {
   const classes = useStyles();
-  const { onClose, selectedValue, open, album } = props;
+  const { onClose, selectedValue, open, album, message } = props;
   const [albumInfo, setAlbumInfo] = useState({
-    name: '',
-    description: '',
+    name: album.name || '',
+    description: album.description || '',
+    uid: album.uid || '',
   });
 
   const handleChange = (evt) => {
     setAlbumInfo({ ...albumInfo, [evt.target.name]: evt.target.value });
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
   };
 
   // This handles the case of the dialog window being closed without a button
@@ -40,17 +37,20 @@ export default function CreateAlbumDialog(props) {
   };
 
   const handleButtonClick = (value) => {
-    // We use the onClose function we got from the Albums component through
+    // We use the onClose function we got from the parent component through
     // props and pass the button pressed
-    // This results in the value being passed back to the Albums
+    // This results in the value being passed back to the parent
     // component where we set selectedValue to that value
-    album.name = albumInfo.name;
-    album.description = albumInfo.description;
-    setAlbumInfo({
-      name: '',
-      description: '',
-    });
-    onClose(value, album);
+    // If this dialog is used to create an album, we need to clear the below
+    // fields otherwise they will remain populated
+    if (value === 'Create') {
+      setAlbumInfo({
+        name: '',
+        description: '',
+        uid: '',
+      });
+    }
+    onClose(value, albumInfo);
   };
 
   return (
@@ -62,7 +62,12 @@ export default function CreateAlbumDialog(props) {
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
       >
-        <DialogTitle id='form-dialog-title'>Create Album</DialogTitle>
+        {message === 'Create' ? (
+          <DialogTitle id='form-dialog-title'>Create Album</DialogTitle>
+        ) : (
+          <DialogTitle id='form-dialog-title'>Edit Album</DialogTitle>
+        )}
+
         <DialogContent>
           <DialogContentText>
             Please enter a name and description (optional) for your album.
@@ -89,12 +94,20 @@ export default function CreateAlbumDialog(props) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleButtonClick()} color='primary'>
+          <Button onClick={() => handleButtonClick('Cancel')} color='primary'>
             Cancel
           </Button>
-          <Button onClick={() => handleButtonClick('Create')} color='primary'>
-            Create
-          </Button>
+          {/* This is a conditional to change the button name depending on
+              what the parent component is */}
+          {message === 'Create' ? (
+            <Button onClick={() => handleButtonClick('Create')} color='primary'>
+              Create
+            </Button>
+          ) : (
+            <Button onClick={() => handleButtonClick('Save')} color='primary'>
+              Save
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>

@@ -178,7 +178,7 @@ export default function Login() {
           >
             Sign In
           </Button>
-          <Grid container justify='center'>
+          <Grid container justifyContent='center'>
             <Grid item>
               <Link component={RouterLink} to='/signup'>
                 {"Don't have an account? Sign Up"}

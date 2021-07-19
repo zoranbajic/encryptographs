@@ -26,7 +26,7 @@ const Home = () => {
         className={classes.centerColumn}
         direction='column'
         display='flex'
-        justify='center'
+        justifyContent='center'
       >
         <Typography variant='h2'>
           {/* {Object.keys(user).length */}

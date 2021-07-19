@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
-import { AlbumCard, CreateAlbumDialog } from '../components';
+import { AlbumCard, AlbumDialog, DeleteDialog } from '../components';
 import { UserContext, UserSessionContext } from '../store';
 import {
   Avatar,
@@ -109,13 +109,11 @@ export default function Albums() {
     setOpen(true);
   };
 
-  // This takes in either "Cancel" or "Create" as a value and the boolean
-  // values of the checkboxes in the Checkboxes component which are contained
-  // in an object
+  // This takes in either "Cancel" or "Create" as a value
   async function handleClose(value, album) {
     // This closes the dialog window
     setOpen(false);
-    if (value) {
+    if (value === 'Create') {
       try {
         const collection = await collectionManager.create(
           'encryptograph.album',
@@ -129,12 +127,9 @@ export default function Albums() {
       } catch (error) {
         alert('Some error occurred');
       } finally {
-        console.log('Albums - Your album was successfully created');
         getAlbums();
       }
     }
-    console.log('Albums - Your value is:', value);
-    console.log('Albums - Your album info is:', album);
   }
 
   return (
@@ -159,7 +154,7 @@ export default function Albums() {
             >
               Create Album
             </Button>
-            <CreateAlbumDialog
+            <AlbumDialog
               open={open}
               onClose={handleClose}
               selectedValue={selectedValue}
@@ -191,13 +186,17 @@ export default function Albums() {
                 My Albums
               </Typography>
               <Grid container className={classes.gridContainer} spacing={4}>
-                {albums.data.map((album) => (
-                  <AlbumCard
-                    key={album.uid}
-                    name={album.getMeta().name}
-                    description={album.getMeta().description}
-                  />
-                ))}
+                {albums.data.map((album) =>
+                  !album.isDeleted ? (
+                    <AlbumCard
+                      key={album.uid}
+                      name={album.getMeta().name}
+                      description={album.getMeta().description}
+                      uid={album.uid}
+                      getAlbums={getAlbums}
+                    />
+                  ) : null
+                )}
               </Grid>
               <Button
                 variant='contained'
@@ -207,11 +206,12 @@ export default function Albums() {
               >
                 Create Album
               </Button>
-              <CreateAlbumDialog
+              <AlbumDialog
                 open={open}
                 onClose={handleClose}
                 selectedValue={selectedValue}
                 album={album}
+                message={'Create'}
               />
             </div>
           </Container>
