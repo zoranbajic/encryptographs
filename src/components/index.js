@@ -6,5 +6,6 @@ export { default as DeleteDialog } from './DeleteDialog';
 export { default as Home } from './Home';
 export { default as Login } from './Login';
 export { default as Albums } from './Albums';
+export { default as Gallery } from './Gallery';
 export { default as Navbar } from './Navbar';
 export { default as Signup } from './Signup';

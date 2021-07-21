@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Albums, ChangePassword, Home, Login, Signup } from './components';
+import {
+  Albums,
+  ChangePassword,
+  Gallery,
+  Home,
+  Login,
+  Signup,
+} from './components';
 
 class Routes extends Component {
   render() {
@@ -11,6 +18,7 @@ class Routes extends Component {
         <Route path='/home' component={Home} />
         <Route path='/login' component={Login} />
         <Route path='/albums' component={Albums} />
+        <Route path='/gallery' component={Gallery} />
         <Route path='/signup' component={Signup} />
       </Switch>
     );
