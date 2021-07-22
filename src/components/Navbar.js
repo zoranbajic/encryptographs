@@ -5,6 +5,7 @@ import Link from '@material-ui/core/Link';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../store';
 import { UserSessionContext } from '../store';
+import { DrawerMenu } from '.';
 import {
   AppBar,
   Badge,
@@ -149,15 +150,15 @@ export default function Navbar() {
     <div className={classes.grow}>
       <AppBar position='static' style={{ position: 'fixed', top: 0, left: 0 }}>
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             edge='start'
             className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
           >
             <MenuIcon />
-          </IconButton>
-
+          </IconButton> */}
+          <DrawerMenu />
           <Typography variant='h6' className={classes.title} noWrap>
             <Link color='inherit' component={RouterLink} to={'/'}>
               Encryptographs

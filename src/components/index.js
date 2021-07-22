@@ -3,6 +3,7 @@ export { default as ChangePassword } from './ChangePassword';
 export { default as ConfirmPassword } from './ConfirmPassword';
 export { default as AlbumDialog } from './AlbumDialog';
 export { default as DeleteDialog } from './DeleteDialog';
+export { default as DrawerMenu } from './DrawerMenu';
 export { default as Home } from './Home';
 export { default as Login } from './Login';
 export { default as Albums } from './Albums';
