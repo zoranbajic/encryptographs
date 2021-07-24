@@ -97,10 +97,11 @@ export default function ConfirmPassword() {
       if (currentUser) {
         setUser(currentUser);
       } else {
-        alert(
-          'Your password was not correct. You will now be logged out and returned to the home screen'
-        );
-        setUserSession('');
+        // alert('Your password was not correct.');
+        // setUserSession('');
+        // await currentUser.logout();
+        // setUserSession('');
+        // setUser('');
         history.push('/');
       }
     }

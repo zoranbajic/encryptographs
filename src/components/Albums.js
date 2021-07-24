@@ -78,7 +78,7 @@ export default function Albums() {
     name: '',
     description: '',
   };
-  const [albums, setAlbums] = useState();
+  const [albums, setAlbums] = useState({});
   const [open, setOpen] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
@@ -128,13 +128,16 @@ export default function Albums() {
         alert('Some error occurred');
       } finally {
         getAlbums();
+        console.log('Albums - Your album was created');
       }
     }
   }
 
   return (
     <div>
-      {!albums ? (
+      {albums.data === undefined ||
+      !albums.data.length ||
+      albums.data.filter((data) => data.isDeleted === false).length === 0 ? (
         <Container component='main' maxWidth='xs'>
           <CssBaseline />
           <div className={classes.paper}>
@@ -159,6 +162,7 @@ export default function Albums() {
               onClose={handleClose}
               selectedValue={selectedValue}
               album={album}
+              message={'Create'}
             />
             {/* </form> */}
           </div>
