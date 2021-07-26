@@ -88,7 +88,11 @@ export default function AlbumCard(props) {
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card className={classes.root}>
-        <CardActionArea>
+        <CardActionArea
+          onClick={() => {
+            alert('This was clicked!');
+          }}
+        >
           <CardHeader title={name} />
           <CardContent>
             <Typography variant='body2' color='textSecondary' component='p'>
