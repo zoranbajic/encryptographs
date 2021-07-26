@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -9,6 +10,8 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import HomeIcon from '@material-ui/icons/Home';
+import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
 import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles({
@@ -49,11 +52,22 @@ export default function DrawerMenu() {
             onKeyDown={toggleDrawer(false)}
           >
             <List>
-              <ListItem button key={'Add Image'}>
+              <ListItem button component={RouterLink} to={'/home'} key={'Home'}>
                 <ListItemIcon>
-                  <AddCircleIcon />
+                  <HomeIcon />
                 </ListItemIcon>
-                <ListItemText primary={'Add Image'} />
+                <ListItemText primary={'Home'} />
+              </ListItem>
+              <ListItem
+                button
+                component={RouterLink}
+                to={'/albums'}
+                key={'View Albums'}
+              >
+                <ListItemIcon>
+                  <PhotoAlbumIcon />
+                </ListItemIcon>
+                <ListItemText primary={'View Albums'} />
               </ListItem>
             </List>
           </div>

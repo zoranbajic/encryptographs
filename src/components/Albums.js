@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
-import { AlbumCard, AlbumDialog, DeleteDialog } from '../components';
+import { AlbumCard, AlbumDialog } from '../components';
 import { UserContext, UserSessionContext } from '../store';
 import {
   Avatar,
