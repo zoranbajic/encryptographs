@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { DrawerMenu } from '.';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
@@ -41,8 +41,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Gallery() {
+export default function Gallery(props) {
   const classes = useStyles();
+  const location = useLocation();
+  const { album } = location.state;
   const images = [
     {
       original: 'https://picsum.photos/id/1018/1000/600/',
@@ -129,7 +131,9 @@ export default function Gallery() {
       <div className={classes.paper}>
         <Grid container justifyContent='center'>
           <Grid item container display='flex' justifyContent='center'>
-            <Typography variant='h4'>Album One</Typography>
+            <Typography variant='h4'>
+              {props.location.state.album.name}
+            </Typography>
           </Grid>
           <Grid container item justifyContent='center'>
             <ImageGallery items={images} />
