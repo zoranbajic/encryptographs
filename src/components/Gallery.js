@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import { Base64 } from 'js-base64';
@@ -47,6 +47,7 @@ export default function Gallery(props) {
   const location = useLocation();
   const { name, description, uid } = location.state.albumMeta;
   const [images, setImages] = useState([]);
+  const galleryRef = useRef();
 
   const history = useHistory();
   const [user, setUser] = useContext(UserContext);
@@ -224,6 +225,11 @@ export default function Gallery(props) {
     // setImages((images) => [images.concat(galleryArray)]);
   }
 
+  function handleDelete() {
+    const galleryElement = galleryRef.current;
+    console.log('The current index is', galleryElement.getCurrentIndex());
+  }
+
   return (
     <Container component='main'>
       <CssBaseline />
@@ -238,9 +244,10 @@ export default function Gallery(props) {
                 items={images}
                 showFullscreenButton={false}
                 showPlayButton={false}
+                ref={galleryRef}
               />
             ) : (
-              <ImageGallery items={images} />
+              <ImageGallery items={images} ref={galleryRef} />
             )}
           </Grid>
           <Grid container item justifyContent='center'>
@@ -255,6 +262,16 @@ export default function Gallery(props) {
               />
               <Button variant='contained' color='primary' component='span'>
                 Add Images
+              </Button>
+            </label>
+            <label htmlFor='delete-image'>
+              <Button
+                variant='contained'
+                color='primary'
+                component='span'
+                onClick={handleDelete}
+              >
+                Delete Image
               </Button>
             </label>
           </Grid>
