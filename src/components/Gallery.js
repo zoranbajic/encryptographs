@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import { Base64 } from 'js-base64';
@@ -45,13 +45,19 @@ const useStyles = makeStyles((theme) => ({
 export default function Gallery(props) {
   const classes = useStyles();
   const location = useLocation();
-  const { name, description, uid } = location.state.album;
+  const { name, description, uid } = location.state.albumMeta;
   const [images, setImages] = useState([]);
 
   const history = useHistory();
+  const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
 
-  console.log('Gallery - Your pictures are - ', images);
+  const collectionManager = user.getCollectionManager();
+  const photoManager = collectionManager.getItemManager(
+    location.state.albumCollection
+  );
+
+  console.log('Gallery: Your album is: ', location.state.albumCollection);
 
   // If the user is not logged in, send them to the login page
   if (!userSession) {
@@ -59,38 +65,163 @@ export default function Gallery(props) {
   } else {
   }
 
+  useEffect(() => {
+    images.length ? null : getPhotos();
+  }, []);
+
+  // Get any photos already saved in the album on Etebase
+  async function getPhotos() {
+    console.log('Gallery: getPhotos has been called');
+    let initialPhotoArray = [];
+    const photos = await photoManager.list();
+    console.log('Gallery: Your item collection is', photos);
+
+    for (const photo of photos.data) {
+      let photoContent = await photo.getContent();
+      let base64Photo = await cleanUp(Base64.fromUint8Array(photoContent));
+      initialPhotoArray.push(base64Photo);
+    }
+
+    updateState(initialPhotoArray);
+
+    async function cleanUp(fullString) {
+      function findAndInsertAfter(fullString, searchString, value) {
+        const insertPosition =
+          fullString.indexOf(searchString) + searchString.length;
+        const newString =
+          fullString.slice(0, insertPosition) +
+          value +
+          fullString.slice(insertPosition);
+        return newString;
+      }
+
+      function findAndInsertBefore(fullString, searchString, value) {
+        const insertPosition = fullString.indexOf(searchString);
+        const newString =
+          fullString.slice(0, insertPosition) +
+          value +
+          fullString.slice(insertPosition);
+        return newString;
+      }
+
+      const firstPass = findAndInsertAfter(fullString, 'data', ':');
+      const secondPass = findAndInsertBefore(firstPass, 'base64', ';');
+      const thirdPass = findAndInsertAfter(secondPass, 'base64', ',');
+
+      return thirdPass;
+    }
+  }
+
+  // This gets the image in the format we need, encrypts it, uploads it, and
+  // updates state
+  async function processFile(evt) {
+    try {
+      const base64Array = await encodeImagesToBase64(evt);
+      const itemArray = await uploadImages(base64Array);
+      updateState(base64Array);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // This function encodes the images both in base64 to use for the image
-  // gallery and as Uint8Arrays to save as items
-  function encodeImages(evt) {
-    const selectedFiles = Array.from(evt.target.files);
-    let base64EncodedImage = '';
+  // gallery
+  async function encodeImagesToBase64(evt) {
+    // Returns base64 strings of all images
+    function getBase64(file) {
+      const reader = new FileReader();
+      return new Promise((resolve) => {
+        reader.onload = (ev) => {
+          resolve(ev.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+    // The array of promises we will return
+    const promises = [];
+    const fileList = Array.from(evt.target.files);
     // We set the input value to an empty string in case the user wants to
     // select the same files, otherwise the onChange won't fire
     evt.target.value = '';
-    if (selectedFiles.length > 0) {
-      for (let i = 0; i < selectedFiles.length; i++) {
-        console.log('Gallery - File', selectedFiles[i].name);
-        let fileReader = new FileReader();
-        let imageFile = selectedFiles[i];
 
-        fileReader.onloadend = function () {
-          base64EncodedImage = fileReader.result;
-          // We add to the image array using a wrapper function
-          setImages((images) => [
-            ...images,
-            {
-              original: base64EncodedImage,
-              thumbnail: base64EncodedImage,
-            },
-          ]);
+    // Loops through all images and adds them to the promises array
+    for (let i = 0; i < fileList.length; i++) {
+      promises.push(getBase64(fileList[i]));
+    }
 
-          // We use the Base64 library to convert the image to a Uint8Array
-          const anArray = Base64.toUint8Array(base64EncodedImage);
-        };
-        // After a file is read it triggers the .onloadend function above
-        fileReader.readAsDataURL(imageFile);
+    // Returns the array of base64 strings
+    return await Promise.all(promises);
+  }
+
+  async function uploadImages(secondStep) {
+    const itemArray = await secondStep.reduce(
+      async (previousPromise, dataString) => {
+        let imagesArray = await previousPromise;
+        // We use the Base64 library to convert the images to Uint8Arrays which
+        // are required to use in Etebase
+        const ImageInt8Array = Base64.toUint8Array(dataString);
+
+        const photo = await photoManager.create(
+          {
+            type: 'file',
+            name: 'image.png',
+            mtime: new Date().getTime(),
+          },
+          ImageInt8Array
+        );
+
+        imagesArray.push(photo);
+
+        return imagesArray;
+      },
+      Promise.resolve([])
+    );
+
+    // Upload the images
+    await photoManager.batch(itemArray);
+    console.log('Gallery: Your item array is', itemArray);
+    return itemArray;
+  }
+
+  function updateState(base64Array) {
+    if (images.length === 0) {
+      let galleryArray = [];
+      // Convert the array to the format required by the Gallery
+      for (const image of base64Array) {
+        galleryArray.push({
+          original: image,
+          thumbnail: image,
+        });
+      }
+      setImages(galleryArray);
+    } else {
+      // We add to the image array using a wrapper function
+      for (const image of base64Array) {
+        setImages((images) => [
+          ...images,
+          { original: image, thumbnail: image },
+        ]);
       }
     }
+
+    // The below code was an attempt to concat of array of objects to state
+    // however while it works it does not trigger a re-render. Will save this
+    // code and research if this is better than the above approach and if so,
+    // how to get it to work
+
+    // const galleryArray = base64Array.reduce(function (
+    //   imageAccumulator,
+    //   currentImage
+    // ) {
+    //   imageAccumulator.push({
+    //     original: currentImage,
+    //     thumbnail: currentImage,
+    //   });
+    //   return imageAccumulator;
+    // },
+    // []);
+
+    // setImages((images) => [images.concat(galleryArray)]);
   }
 
   return (
@@ -119,7 +250,7 @@ export default function Gallery(props) {
                 id='upload-images'
                 name='upload-images'
                 type='file'
-                onChange={encodeImages}
+                onChange={processFile}
                 multiple
               />
               <Button variant='contained' color='primary' component='span'>

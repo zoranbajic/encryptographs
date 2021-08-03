@@ -100,6 +100,7 @@ export default function Albums() {
     try {
       albumCollections = await collectionManager.list('encryptograph.album');
       setAlbums(albumCollections);
+      console.log('Albums: Your albums are', albumCollections);
     } catch (error) {
       console.log(error);
     }
@@ -115,6 +116,7 @@ export default function Albums() {
     setOpen(false);
     if (value === 'Create') {
       try {
+        // Creates a collection
         const collection = await collectionManager.create(
           'encryptograph.album',
           {
@@ -123,12 +125,13 @@ export default function Albums() {
           },
           '' // Empty content
         );
+        // Uploads the collection
         await collectionManager.upload(collection);
+        console.log('Albums - Your album was created', collection);
       } catch (error) {
         alert('Some error occurred');
       } finally {
         getAlbums();
-        console.log('Albums - Your album was created');
       }
     }
   }
@@ -194,6 +197,7 @@ export default function Albums() {
                   !album.isDeleted ? (
                     <AlbumCard
                       key={album.uid}
+                      album={album}
                       name={album.getMeta().name}
                       description={album.getMeta().description}
                       uid={album.uid}

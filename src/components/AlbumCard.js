@@ -29,9 +29,9 @@ export default function AlbumCard(props) {
   const classes = useStyles();
   const [openAlbumDialog, setOpenAlbumDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const { name, description, uid, getAlbums } = props;
+  const { album, name, description, uid, getAlbums } = props;
   const [user, setUser] = useContext(UserContext);
-  let album = {
+  let albumMeta = {
     name,
     description,
     uid,
@@ -40,6 +40,17 @@ export default function AlbumCard(props) {
   let selectedDeleteValue = '';
 
   const collectionManager = user.getCollectionManager();
+
+  async function getAlbum(uid) {
+    let albumCollection = {};
+    try {
+      albumCollection = await collectionManager.fetch(uid);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      return albumCollection;
+    }
+  }
 
   const handleAlbumDialogClickOpen = () => {
     setOpenAlbumDialog(true);
@@ -55,7 +66,7 @@ export default function AlbumCard(props) {
     setOpenAlbumDialog(false);
     if (value === 'Save') {
       try {
-        const albumCollection = await collectionManager.fetch(album.uid);
+        const albumCollection = await getAlbum(album.uid);
         const meta = albumCollection.getMeta();
         albumCollection.setMeta({
           ...meta,
@@ -64,7 +75,8 @@ export default function AlbumCard(props) {
         });
         await collectionManager.upload(albumCollection);
       } catch (error) {
-        alert('An error occurred');
+        alert('An error occurred in editing your data');
+        console.log('Your editing error is ', error);
       } finally {
         getAlbums();
       }
@@ -77,7 +89,7 @@ export default function AlbumCard(props) {
     // If the value is Agree, we delete the album and re-render Albums component
     if (value === 'Agree') {
       try {
-        const albumCollection = await collectionManager.fetch(album.uid);
+        const albumCollection = getAlbum(album.uid);
         albumCollection.delete();
         await collectionManager.upload(albumCollection);
       } catch (error) {
@@ -93,7 +105,10 @@ export default function AlbumCard(props) {
       <Card className={classes.root}>
         <CardActionArea
           component={RouterLink}
-          to={{ pathname: '/gallery', state: { album: album } }}
+          to={{
+            pathname: '/gallery',
+            state: { albumMeta: albumMeta, albumCollection: album },
+          }}
         >
           <CardHeader title={name} />
           <CardContent>
@@ -118,7 +133,7 @@ export default function AlbumCard(props) {
             open={openAlbumDialog}
             onClose={handleClose}
             selectedValue={selectedValue}
-            album={album}
+            album={albumMeta}
             message={'Edit'}
           />
           <IconButton
@@ -132,7 +147,7 @@ export default function AlbumCard(props) {
             open={openDeleteDialog}
             onClose={handleDeleteDialogClose}
             selectedValue={selectedDeleteValue}
-            album={album}
+            album={albumMeta}
           />
         </CardActions>
       </Card>
