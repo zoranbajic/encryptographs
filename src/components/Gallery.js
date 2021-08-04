@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { DeleteDialog } from '.';
 import * as Etebase from 'etebase';
 import { Base64 } from 'js-base64';
 import ImageGallery from 'react-image-gallery';
@@ -47,11 +48,16 @@ export default function Gallery(props) {
   const location = useLocation();
   const { name, description, uid } = location.state.albumMeta;
   const [images, setImages] = useState([]);
+  const [imageUids, setImageUids] = useState([]);
+  let uidArray = [];
   const galleryRef = useRef();
 
   const history = useHistory();
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  let selectedDeleteValue = '';
 
   const collectionManager = user.getCollectionManager();
   const photoManager = collectionManager.getItemManager(
@@ -70,10 +76,15 @@ export default function Gallery(props) {
     images.length ? null : getPhotos();
   }, []);
 
+  const handleDeleteDialogClickOpen = () => {
+    setOpenDeleteDialog(true);
+  };
+
   // Get any photos already saved in the album on Etebase
   async function getPhotos() {
     console.log('Gallery: getPhotos has been called');
     let initialPhotoArray = [];
+    let uidArray = [];
     const photos = await photoManager.list();
     console.log('Gallery: Your item collection is', photos);
 
@@ -81,9 +92,11 @@ export default function Gallery(props) {
       let photoContent = await photo.getContent();
       let base64Photo = await cleanUp(Base64.fromUint8Array(photoContent));
       initialPhotoArray.push(base64Photo);
+      uidArray.push(photo.uid);
     }
 
-    updateState(initialPhotoArray);
+    console.log('Gallery: Your initial uid array is', uidArray);
+    updateState(initialPhotoArray, uidArray);
 
     async function cleanUp(fullString) {
       function findAndInsertAfter(fullString, searchString, value) {
@@ -119,7 +132,7 @@ export default function Gallery(props) {
     try {
       const base64Array = await encodeImagesToBase64(evt);
       const itemArray = await uploadImages(base64Array);
-      updateState(base64Array);
+      updateState(base64Array, uidArray);
     } catch (err) {
       console.log(err);
     }
@@ -172,6 +185,7 @@ export default function Gallery(props) {
         );
 
         imagesArray.push(photo);
+        uidArray.push(photo.uid);
 
         return imagesArray;
       },
@@ -184,7 +198,9 @@ export default function Gallery(props) {
     return itemArray;
   }
 
-  function updateState(base64Array) {
+  function updateState(base64Array, uidArray) {
+    // On the initial render, we can set the Images state to the array.
+    // Otherwise, we will append the images to state
     if (images.length === 0) {
       let galleryArray = [];
       // Convert the array to the format required by the Gallery
@@ -204,6 +220,23 @@ export default function Gallery(props) {
         ]);
       }
     }
+
+    // We need to maintain a list of the uids for each image since this
+    // information cannot be stored within any of the props of the images
+
+    // if (imageUids.length === 0) {
+    //   let uids = [];
+    //   for (const uid of uidArray) {
+    //     uids.push(uid);
+    //   }
+    //   setImageUids(uids);
+    // } else {
+
+    for (const uid of uidArray) {
+      setImageUids((imageUids) => [...imageUids, uid]);
+    }
+
+    // }
 
     // The below code was an attempt to concat of array of objects to state
     // however while it works it does not trigger a re-render. Will save this
@@ -225,9 +258,30 @@ export default function Gallery(props) {
     // setImages((images) => [images.concat(galleryArray)]);
   }
 
-  function handleDelete() {
+  async function handleDeleteDialogClose(value) {
     const galleryElement = galleryRef.current;
+    const indexOfPhoto = galleryElement.getCurrentIndex();
+    const photoUid = imageUids[indexOfPhoto];
     console.log('The current index is', galleryElement.getCurrentIndex());
+    console.log(
+      'The corresponding uid is',
+      imageUids[galleryElement.getCurrentIndex()]
+    );
+    // This closes the delete dialog
+    setOpenDeleteDialog(false);
+    if (value === 'Agree') {
+      try {
+        // const photo = await photoManager.fetch(photoUid);
+        // photo.delete();
+        // await itemManager.batch([item]);
+        console.log('Gallery: The uid of the photo to be deleted is', photoUid);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        // We want to make sure to set state here of just the remaining photos
+        // (Use splice)
+      }
+    }
   }
 
   return (
@@ -269,10 +323,16 @@ export default function Gallery(props) {
                 variant='contained'
                 color='primary'
                 component='span'
-                onClick={handleDelete}
+                onClick={handleDeleteDialogClickOpen}
               >
                 Delete Image
               </Button>
+              <DeleteDialog
+                open={openDeleteDialog}
+                onClose={handleDeleteDialogClose}
+                selectedValue={selectedDeleteValue}
+                message={'album'}
+              />
             </label>
           </Grid>
         </Grid>

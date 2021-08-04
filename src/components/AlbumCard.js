@@ -148,6 +148,7 @@ export default function AlbumCard(props) {
             onClose={handleDeleteDialogClose}
             selectedValue={selectedDeleteValue}
             album={albumMeta}
+            message={'album'}
           />
         </CardActions>
       </Card>

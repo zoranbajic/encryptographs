@@ -10,7 +10,7 @@ import {
 
 export default function DeleteDialog(props) {
   // const [open, setOpen] = useState(false);
-  const { open, onClose, selectedValue, album } = props;
+  const { open, onClose, selectedValue, album, message } = props;
 
   const handleButtonClick = (value) => {
     onClose(value, album);
@@ -31,11 +31,11 @@ export default function DeleteDialog(props) {
         aria-describedby='alert-dialog-description'
       >
         <DialogTitle id='alert-dialog-title'>
-          {'Delete this album?'}
+          {`Delete this ${message}?`}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
-            Please confirm that you wish to delete this album.
+            {`Please confirm that you wish to delete this ${message}.`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
