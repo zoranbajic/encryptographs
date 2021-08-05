@@ -64,8 +64,6 @@ export default function Gallery(props) {
     location.state.albumCollection
   );
 
-  console.log('Gallery: Your album is: ', location.state.albumCollection);
-
   // If the user is not logged in, send them to the login page
   if (!userSession) {
     history.push('/login');
@@ -82,20 +80,23 @@ export default function Gallery(props) {
 
   // Get any photos already saved in the album on Etebase
   async function getPhotos() {
-    console.log('Gallery: getPhotos has been called');
     let initialPhotoArray = [];
     let uidArray = [];
-    const photos = await photoManager.list();
-    console.log('Gallery: Your item collection is', photos);
+    let photos = [];
+    let photoList = await photoManager.list();
 
-    for (const photo of photos.data) {
+    // We need to remove any photos that have been marked as deleted
+    for (const photo of photoList.data) {
+      photo.isDeleted ? null : photos.push(photo);
+    }
+
+    for (const photo of photos) {
       let photoContent = await photo.getContent();
       let base64Photo = await cleanUp(Base64.fromUint8Array(photoContent));
       initialPhotoArray.push(base64Photo);
       uidArray.push(photo.uid);
     }
 
-    console.log('Gallery: Your initial uid array is', uidArray);
     updateState(initialPhotoArray, uidArray);
 
     async function cleanUp(fullString) {
@@ -194,7 +195,6 @@ export default function Gallery(props) {
 
     // Upload the images
     await photoManager.batch(itemArray);
-    console.log('Gallery: Your item array is', itemArray);
     return itemArray;
   }
 
@@ -224,19 +224,9 @@ export default function Gallery(props) {
     // We need to maintain a list of the uids for each image since this
     // information cannot be stored within any of the props of the images
 
-    // if (imageUids.length === 0) {
-    //   let uids = [];
-    //   for (const uid of uidArray) {
-    //     uids.push(uid);
-    //   }
-    //   setImageUids(uids);
-    // } else {
-
     for (const uid of uidArray) {
       setImageUids((imageUids) => [...imageUids, uid]);
     }
-
-    // }
 
     // The below code was an attempt to concat of array of objects to state
     // however while it works it does not trigger a re-render. Will save this
@@ -262,24 +252,23 @@ export default function Gallery(props) {
     const galleryElement = galleryRef.current;
     const indexOfPhoto = galleryElement.getCurrentIndex();
     const photoUid = imageUids[indexOfPhoto];
-    console.log('The current index is', galleryElement.getCurrentIndex());
-    console.log(
-      'The corresponding uid is',
-      imageUids[galleryElement.getCurrentIndex()]
-    );
+
     // This closes the delete dialog
     setOpenDeleteDialog(false);
     if (value === 'Agree') {
       try {
-        // const photo = await photoManager.fetch(photoUid);
-        // photo.delete();
-        // await itemManager.batch([item]);
-        console.log('Gallery: The uid of the photo to be deleted is', photoUid);
+        const photo = await photoManager.fetch(photoUid);
+        photo.delete();
+        await photoManager.batch([photo]);
       } catch (err) {
         console.log(err);
       } finally {
-        // We want to make sure to set state here of just the remaining photos
-        // (Use splice)
+        setImageUids((previous) =>
+          previous.filter((uid, index) => index !== indexOfPhoto)
+        );
+        setImages((previous) =>
+          previous.filter((uid, index) => index !== indexOfPhoto)
+        );
       }
     }
   }
@@ -331,7 +320,7 @@ export default function Gallery(props) {
                 open={openDeleteDialog}
                 onClose={handleDeleteDialogClose}
                 selectedValue={selectedDeleteValue}
-                message={'album'}
+                message={'image'}
               />
             </label>
           </Grid>
