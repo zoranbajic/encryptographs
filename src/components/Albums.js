@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
-import { AlbumCard, AlbumDialog, DeleteDialog } from '../components';
+import { AlbumCard, AlbumDialog } from '../components';
 import { UserContext, UserSessionContext } from '../store';
 import {
   Avatar,
@@ -78,7 +78,7 @@ export default function Albums() {
     name: '',
     description: '',
   };
-  const [albums, setAlbums] = useState();
+  const [albums, setAlbums] = useState({});
   const [open, setOpen] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
@@ -100,6 +100,7 @@ export default function Albums() {
     try {
       albumCollections = await collectionManager.list('encryptograph.album');
       setAlbums(albumCollections);
+      console.log('Albums: Your albums are', albumCollections);
     } catch (error) {
       console.log(error);
     }
@@ -115,6 +116,7 @@ export default function Albums() {
     setOpen(false);
     if (value === 'Create') {
       try {
+        // Creates a collection
         const collection = await collectionManager.create(
           'encryptograph.album',
           {
@@ -123,7 +125,9 @@ export default function Albums() {
           },
           '' // Empty content
         );
+        // Uploads the collection
         await collectionManager.upload(collection);
+        console.log('Albums - Your album was created', collection);
       } catch (error) {
         alert('Some error occurred');
       } finally {
@@ -134,7 +138,9 @@ export default function Albums() {
 
   return (
     <div>
-      {!albums ? (
+      {albums.data === undefined ||
+      !albums.data.length ||
+      albums.data.filter((data) => data.isDeleted === false).length === 0 ? (
         <Container component='main' maxWidth='xs'>
           <CssBaseline />
           <div className={classes.paper}>
@@ -159,6 +165,7 @@ export default function Albums() {
               onClose={handleClose}
               selectedValue={selectedValue}
               album={album}
+              message={'Create'}
             />
             {/* </form> */}
           </div>
@@ -190,6 +197,7 @@ export default function Albums() {
                   !album.isDeleted ? (
                     <AlbumCard
                       key={album.uid}
+                      album={album}
                       name={album.getMeta().name}
                       description={album.getMeta().description}
                       uid={album.uid}
