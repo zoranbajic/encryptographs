@@ -10,3 +10,4 @@ export { default as Albums } from './Albums';
 export { default as Gallery } from './Gallery';
 export { default as Navbar } from './Navbar';
 export { default as Signup } from './Signup';
+export { default as PublicKey } from './PublicKey';

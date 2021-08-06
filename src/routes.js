@@ -6,6 +6,7 @@ import {
   Gallery,
   Home,
   Login,
+  PublicKey,
   Signup,
 } from './components';
 
@@ -20,6 +21,7 @@ class Routes extends Component {
         <Route path='/albums' component={Albums} />
         <Route path='/gallery' component={Gallery} />
         <Route path='/signup' component={Signup} />
+        <Route path='/publickey' component={PublicKey} />
       </Switch>
     );
   }

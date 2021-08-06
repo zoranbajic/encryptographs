@@ -88,6 +88,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={ChangePassword}>Change Password</MenuItem>
+      <MenuItem onClick={PublicKey}>View Public Key</MenuItem>
       <MenuItem onClick={Logout}>Logout</MenuItem>
     </Menu>
   );
@@ -144,6 +145,11 @@ export default function Navbar() {
   function ChangePassword() {
     handleMenuClose();
     history.push('/changepassword');
+  }
+
+  function PublicKey() {
+    handleMenuClose();
+    history.push('/publickey');
   }
 
   return (
