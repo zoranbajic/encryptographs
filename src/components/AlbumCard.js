@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { AlbumDialog, DeleteDialog, Gallery } from '../components';
+import { AlbumDialog, DeleteDialog, ShareInviteDialog } from '.';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserContext, UserSessionContext } from '../store';
 import { makeStyles } from '@material-ui/core/styles';
@@ -29,6 +29,7 @@ export default function AlbumCard(props) {
   const classes = useStyles();
   const [openAlbumDialog, setOpenAlbumDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openShareDialog, setOpenShareDialog] = useState(false);
   const { album, name, description, uid, getAlbums } = props;
   const [user, setUser] = useContext(UserContext);
   let albumMeta = {
@@ -36,6 +37,7 @@ export default function AlbumCard(props) {
     description,
     uid,
   };
+  let nameValue = '';
   let selectedValue = '';
   let selectedDeleteValue = '';
 
@@ -58,6 +60,16 @@ export default function AlbumCard(props) {
 
   const handleDeleteDialogClickOpen = () => {
     setOpenDeleteDialog(true);
+  };
+
+  const handleShareDialogClickOpen = () => {
+    setOpenShareDialog(true);
+  };
+
+  const handleShareDialogClose = (value, accessLevel) => {
+    // Code to share goes here
+    setOpenShareDialog(false);
+    console.log('AlbumCard: The share dialog was closed');
   };
 
   // This takes in either "Cancel" or "Save" as a value
@@ -118,9 +130,18 @@ export default function AlbumCard(props) {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <IconButton size='small' color='primary'>
+          <IconButton
+            size='small'
+            color='primary'
+            onClick={handleShareDialogClickOpen}
+          >
             <ShareIcon />
           </IconButton>
+          <ShareInviteDialog
+            open={openShareDialog}
+            onClose={handleShareDialogClose}
+            nameValue={nameValue}
+          />
           <div style={{ flex: '1 0 0' }} />
           <IconButton
             size='small'
