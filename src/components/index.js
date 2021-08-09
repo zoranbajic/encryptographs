@@ -12,5 +12,3 @@ export { default as Navbar } from './Navbar';
 export { default as Signup } from './Signup';
 export { default as PublicKey } from './PublicKey';
 export { default as ShareInviteDialog } from './ShareInviteDialog';
-export { default as ShareDialogInputs } from './ShareDialogInputs';
-export { default as ConfirmDialog } from './ConfirmDialog';

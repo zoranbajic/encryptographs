@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  useMediaQuery,
 } from '@material-ui/core';
-import { ConfirmDialog, ShareDialogInputs } from '.';
 import SendIcon from '@material-ui/icons/Send';
 
 // Styling for the send button
@@ -19,36 +24,43 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ShareInviteDialog(props) {
   const classes = useStyles();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { onClose, selectedValue, open } = props;
-  const [sendButtonActivity, setSendButtonActivity] = useState(false);
-  const [shareInputContents, setShareInputContents] = useState({});
+  const [inviteeSelections, setInviteeSelections] = useState({
+    user: '',
+    userAccess: 'read',
+  });
 
-  // For confirmation dialog
-  const [sendOpen, setSendOpen] = useState(false);
-
-  // We use this to obtain the value of the text and radio button selected in
-  // the ShareDialogInputs component
-  const getShareInputContents = (inviteeSelections) => {
-    setShareInputContents(inviteeSelections);
+  const handleTextChange = (evt) => {
+    setInviteeSelections({
+      ...inviteeSelections,
+      [evt.target.name]: evt.target.value,
+    });
   };
 
-  // This handles the case of the dialog window being closed without a button
-  // being pressed
-  const handleClose = () => {
-    onClose(selectedValue);
+  const handleRadioChange = (evt) => {
+    setInviteeSelections({
+      ...inviteeSelections,
+      userAccess: evt.target.value,
+    });
   };
 
-  const handleSendClick = (value) => {
-    setSendOpen(true);
-    handleButtonClick(value);
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    setInviteeSelections({
+      user: '',
+      userAccess: 'read',
+    });
+    onClose('Send', inviteeSelections);
   };
 
-  const handleButtonClick = (value) => {
-    // We use the onClose function we got from the AlbumCard component through
-    // props and pass the button pressed and the value of the text/radio inputs
-    // This results in the value being passed back to the AlbumCard
-    // component where we set selectedValue to that value
-    onClose(value, shareInputContents);
+  const handleCancel = (evt) => {
+    setInviteeSelections({
+      user: '',
+      userAccess: 'read',
+    });
+    onClose('Cancel', inviteeSelections);
   };
 
   return (
@@ -56,43 +68,79 @@ export default function ShareInviteDialog(props) {
       open={open}
       // When you click away from the dialog this fires. If this was not here
       // you would need to select an option to close the window
-      onClose={handleClose}
+      onClose={handleCancel}
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
+      fullScreen={fullScreen}
     >
-      <form noValidate autoComplete='off'>
+      <form noValidate autoComplete='off' onSubmit={handleSubmit}>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
             Please enter the name of the user you would like to share this album
             with and select the level of access you would like them to have.
           </DialogContentText>
           {/* We send the getShareInputContents function as a prop */}
-          <ShareDialogInputs getShareInputContents={getShareInputContents} />
+          <TextField
+            autoFocus
+            id='user'
+            label='User'
+            name='user'
+            required
+            variant='outlined'
+            value={inviteeSelections.user}
+            onChange={handleTextChange}
+            fullWidth
+          />
+
+          <FormControl component='fieldset'>
+            <RadioGroup
+              row
+              aria-label='position'
+              name='position'
+              onChange={handleRadioChange}
+              value={inviteeSelections.userAccess}
+            >
+              <FormControlLabel
+                control={<Radio color='primary' />}
+                label='Admin'
+                labelPlacement='bottom'
+                name='admin'
+                value='admin'
+              />
+              <FormControlLabel
+                value='readWrite'
+                control={<Radio color='primary' />}
+                label='View and Add/Delete'
+                labelPlacement='bottom'
+                name='readWrite'
+                value='readWrite'
+              />
+              <FormControlLabel
+                value='read'
+                control={<Radio color='primary' />}
+                label='View Only'
+                labelPlacement='bottom'
+                name='read'
+                value='read'
+              />
+            </RadioGroup>
+          </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleButtonClick('Cancel')} color='primary'>
+          <Button onClick={handleCancel} color='primary' value='Cancel'>
             Cancel
           </Button>
           <div style={{ flex: '1 0 0' }} />
           <Button
-            // onClick={() => handleButtonClick('Send')}
-            onClick={() => handleSendClick('Send')}
+            type='submit'
             variant='contained'
             color='primary'
             className={classes.button}
             endIcon={<SendIcon>send</SendIcon>}
-            // disabled={sendButtonActivity}
+            value='Send'
           >
             Send
           </Button>
-          <ConfirmDialog
-            title='Reminder Sent!'
-            open={sendOpen}
-            setOpen={setSendOpen}
-            onOk={handleButtonClick}
-          >
-            Your invitation has been sent!
-          </ConfirmDialog>
         </DialogActions>
       </form>
     </Dialog>

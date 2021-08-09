@@ -69,7 +69,12 @@ export default function AlbumCard(props) {
   const handleShareDialogClose = (value, accessLevel) => {
     // Code to share goes here
     setOpenShareDialog(false);
-    console.log('AlbumCard: The share dialog was closed');
+    console.log('AlbumCard: The share dialog value is', value);
+    console.log('AlbumCard: The share dialog user is', accessLevel.user);
+    console.log(
+      'AlbumCard: The share dialog access level is',
+      accessLevel.userAccess
+    );
   };
 
   // This takes in either "Cancel" or "Save" as a value
