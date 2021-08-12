@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AlbumDialog, DeleteDialog, ShareInviteDialog } from '.';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserContext, UserSessionContext } from '../store';
+import * as Etebase from 'etebase';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Card,
@@ -66,7 +67,7 @@ export default function AlbumCard(props) {
     setOpenShareDialog(true);
   };
 
-  const handleShareDialogClose = (value, accessLevel) => {
+  async function handleShareDialogClose(value, accessLevel) {
     // Code to share goes here
     setOpenShareDialog(false);
     console.log('AlbumCard: The share dialog value is', value);
@@ -75,7 +76,25 @@ export default function AlbumCard(props) {
       'AlbumCard: The share dialog access level is',
       accessLevel.userAccess
     );
-  };
+    if (value === 'Send') {
+      try {
+        const invitationManager = user.getInvitationManager();
+        const invitee = await invitationManager.fetchUserProfile(
+          accessLevel.user
+        );
+        await invitationManager.invite(
+          album,
+          accessLevel.user,
+          invitee.pubkey,
+          Etebase.CollectionAccessLevel[accessLevel.userAccess]
+        );
+      } catch (err) {
+        console.log('The error was', err);
+      } finally {
+        console.log('AlbumCard: Your invitation was successfully sent');
+      }
+    }
+  }
 
   // This takes in either "Cancel" or "Save" as a value
   async function handleClose(value, album) {

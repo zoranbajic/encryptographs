@@ -8,6 +8,7 @@ import {
   Login,
   PublicKey,
   Signup,
+  Invites,
 } from './components';
 
 class Routes extends Component {
@@ -22,6 +23,7 @@ class Routes extends Component {
         <Route path='/gallery' component={Gallery} />
         <Route path='/signup' component={Signup} />
         <Route path='/publickey' component={PublicKey} />
+        <Route path='/invites' component={Invites} />
       </Switch>
     );
   }

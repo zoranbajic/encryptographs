@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
@@ -58,6 +58,14 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const history = useHistory();
+
+  // Pull in our state from Context
+  const [user, setUser] = useContext(UserContext);
+  const [userSession, setUserSession] = useContext(UserSessionContext);
+
+  const [numberOfInvites, setNumberOfInvites] = useState(0);
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -110,7 +118,6 @@ export default function Navbar() {
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -126,11 +133,14 @@ export default function Navbar() {
     </Menu>
   );
 
-  const history = useHistory();
-
-  // Pull in our state from Context
-  const [user, setUser] = useContext(UserContext);
-  const [userSession, setUserSession] = useContext(UserSessionContext);
+  useEffect(() => {
+    console.log('Navbar: The user is !==', user !== '');
+    // if (user !== '') {
+    //   console.log('Navbar: This was true', user);
+    //   getInvites();
+    // }
+    user !== '' ? getInvites() : null;
+  }, [user]);
 
   async function Logout() {
     // setAnchorEl(null);
@@ -150,6 +160,12 @@ export default function Navbar() {
   function PublicKey() {
     handleMenuClose();
     history.push('/publickey');
+  }
+
+  async function getInvites() {
+    const invitationManager = user.getInvitationManager();
+    const invitations = await invitationManager.listIncoming();
+    setNumberOfInvites(invitations.data.length);
   }
 
   return (
@@ -184,7 +200,7 @@ export default function Navbar() {
             <div>
               <div className={classes.sectionDesktop}>
                 <IconButton aria-label='show 4 new mails' color='inherit'>
-                  <Badge badgeContent={4} color='secondary'>
+                  <Badge badgeContent={numberOfInvites} color='secondary'>
                     <MailIcon />
                   </Badge>
                 </IconButton>

@@ -29,7 +29,7 @@ export default function ShareInviteDialog(props) {
   const { onClose, selectedValue, open } = props;
   const [inviteeSelections, setInviteeSelections] = useState({
     user: '',
-    userAccess: 'read',
+    userAccess: 'ReadOnly',
   });
 
   const handleTextChange = (evt) => {
@@ -50,7 +50,7 @@ export default function ShareInviteDialog(props) {
     evt.preventDefault();
     setInviteeSelections({
       user: '',
-      userAccess: 'read',
+      userAccess: 'ReadOnly',
     });
     onClose('Send', inviteeSelections);
   };
@@ -58,7 +58,7 @@ export default function ShareInviteDialog(props) {
   const handleCancel = (evt) => {
     setInviteeSelections({
       user: '',
-      userAccess: 'read',
+      userAccess: 'ReadOnly',
     });
     onClose('Cancel', inviteeSelections);
   };
@@ -79,7 +79,6 @@ export default function ShareInviteDialog(props) {
             Please enter the name of the user you would like to share this album
             with and select the level of access you would like them to have.
           </DialogContentText>
-          {/* We send the getShareInputContents function as a prop */}
           <TextField
             autoFocus
             id='user'
@@ -104,24 +103,24 @@ export default function ShareInviteDialog(props) {
                 control={<Radio color='primary' />}
                 label='Admin'
                 labelPlacement='bottom'
-                name='admin'
-                value='admin'
+                name='Admin'
+                value='Admin'
               />
               <FormControlLabel
-                value='readWrite'
+                value='ReadWrite'
                 control={<Radio color='primary' />}
                 label='View and Add/Delete'
                 labelPlacement='bottom'
-                name='readWrite'
-                value='readWrite'
+                name='ReadWrite'
+                value='ReadWrite'
               />
               <FormControlLabel
-                value='read'
+                value='ReadOnly'
                 control={<Radio color='primary' />}
                 label='View Only'
                 labelPlacement='bottom'
-                name='read'
-                value='read'
+                name='ReadOnly'
+                value='ReadOnly'
               />
             </RadioGroup>
           </FormControl>
