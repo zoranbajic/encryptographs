@@ -37,8 +37,8 @@ export default function PublicKey() {
 
   return (
     <Grid container direction='column' align='center'>
-      <Typography component='h1' variant='h5' className={classes.title}>
-        Public Key
+      <Typography component='h1' variant='h4' className={classes.title}>
+        Your Public Key
       </Typography>
       <Grid
         container

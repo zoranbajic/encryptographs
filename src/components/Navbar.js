@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
+import * as Etebase from 'etebase';
 import { useHistory } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { UserContext } from '../store';
-import { UserSessionContext } from '../store';
+import { UserContext, UserSessionContext } from '../store';
 import { DrawerMenu } from '.';
 import {
   AppBar,
@@ -64,6 +64,7 @@ export default function Navbar() {
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
 
+  const [invites, setInvites] = useState({});
   const [numberOfInvites, setNumberOfInvites] = useState(0);
 
   const handleProfileMenuOpen = (event) => {
@@ -113,7 +114,7 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label='show 4 new mails' color='inherit'>
+        <IconButton aria-label='show new invites' color='inherit'>
           <Badge badgeContent={4} color='secondary'>
             <MailIcon />
           </Badge>
@@ -134,17 +135,10 @@ export default function Navbar() {
   );
 
   useEffect(() => {
-    console.log('Navbar: The user is !==', user !== '');
-    // if (user !== '') {
-    //   console.log('Navbar: This was true', user);
-    //   getInvites();
-    // }
     user !== '' ? getInvites() : null;
   }, [user]);
 
   async function Logout() {
-    // setAnchorEl(null);
-    // handleMobileMenuClose();
     handleMenuClose();
     await user.logout();
     setUserSession('');
@@ -163,8 +157,11 @@ export default function Navbar() {
   }
 
   async function getInvites() {
+    const delimiter = '   ';
     const invitationManager = user.getInvitationManager();
     const invitations = await invitationManager.listIncoming();
+    console.log('Navbar: Your invitations are', invitations);
+    setInvites(invitations);
     setNumberOfInvites(invitations.data.length);
   }
 
@@ -172,14 +169,6 @@ export default function Navbar() {
     <div className={classes.grow}>
       <AppBar position='static' style={{ position: 'fixed', top: 0, left: 0 }}>
         <Toolbar>
-          {/* <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='open drawer'
-          >
-            <MenuIcon />
-          </IconButton> */}
           <DrawerMenu />
           <Typography variant='h6' className={classes.title} noWrap>
             <Link color='inherit' component={RouterLink} to={'/'}>
@@ -199,7 +188,15 @@ export default function Navbar() {
           ) : (
             <div>
               <div className={classes.sectionDesktop}>
-                <IconButton aria-label='show 4 new mails' color='inherit'>
+                <IconButton
+                  aria-label='show 4 new mails'
+                  color='inherit'
+                  component={RouterLink}
+                  to={{
+                    pathname: '/invites',
+                    state: { invites: invites },
+                  }}
+                >
                   <Badge badgeContent={numberOfInvites} color='secondary'>
                     <MailIcon />
                   </Badge>

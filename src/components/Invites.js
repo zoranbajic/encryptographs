@@ -1,24 +1,21 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import * as Etebase from 'etebase';
+import { useHistory, useLocation } from 'react-router';
+import { UserContext, UserSessionContext } from '../store';
+import { PublicKeyDialog } from '.';
 import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import FolderIcon from '@material-ui/icons/Folder';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MailIcon from '@material-ui/icons/Mail';
-import PersonSharpIcon from '@material-ui/icons/PersonSharp';
+import {
+  Avatar,
+  Button,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+} from '@material-ui/core';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,18 +27,50 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  button: {
+    marginRight: '10px',
+    marginTop: '10px',
+  },
+  listItem: {
+    paddingRight: '200px',
+  },
 }));
-
-function generate(element) {
-  return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    })
-  );
-}
 
 export default function InteractiveList() {
   const classes = useStyles();
+  const location = useLocation();
+  const invites = location.state.invites;
+  const [user, setUser] = useContext(UserContext);
+  const [userSession, setUserSession] = useContext(UserSessionContext);
+  const [openPublicKeyDialog, setOpenPublicKeyDialog] = useState(false);
+  const history = useHistory();
+
+  // If the user is not logged in, send them to the login page
+  if (!userSession) {
+    history.push('/login');
+  } else {
+  }
+
+  const handlePublicKeyDialogClickOpen = () => {
+    setOpenPublicKeyDialog(true);
+  };
+
+  function getPublicKey(invite) {
+    const publicKey = invite.fromPubkey;
+    const delimiter = ' ';
+    const prettyFingerprint = Etebase.getPrettyFingerprint(
+      publicKey,
+      delimiter
+    );
+
+    const lineOne = prettyFingerprint.substr(0, 23);
+    const lineTwo = prettyFingerprint.substr(24, 23);
+    const lineThree = prettyFingerprint.substr(48);
+
+    return { lineOne, lineTwo, lineThree };
+  }
+
+  console.log('Invites: Your state info is', invites);
 
   return (
     <div className={classes.paper}>
@@ -51,65 +80,50 @@ export default function InteractiveList() {
         justifyContent='center'
         alignItems='center'
       >
-        <Grid item xs={12} md={6}>
-          <div className={classes.demo}>
-            <List>
-              <ListItem divider>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PersonSharpIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary='Marcela'
-                  secondary='Marcela wants to share the album, "Galena Trip", with you'
-                />
-                <ListItemSecondaryAction>
-                  <Button variant='outlined' edge='end' aria-label='deny'>
-                    Deny
-                  </Button>
-                  <Button
-                    edge='end'
-                    variant='outlined'
-                    aria-label='accept'
-                    color='primary'
-                  >
-                    Accept
-                  </Button>
-                </ListItemSecondaryAction>
-              </ListItem>
-              <ListItem divider>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PersonSharpIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary='Marcela'
-                  secondary='Monica wants to share the album, "Cool pictures" with you'
-                />
-                <ListItemSecondaryAction>
-                  <Button
-                    variant='outlined'
-                    disabled
-                    edge='end'
-                    aria-label='deny'
-                  >
-                    Deny
-                  </Button>
-                  <Button
-                    edge='end'
-                    variant='outlined'
-                    aria-label='accept'
-                    color='primary'
-                  >
-                    Accept
-                  </Button>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
-          </div>
-        </Grid>
+        {invites.data.map((invite) => (
+          <Grid item xs={12} md={12}>
+            <div>
+              <List>
+                <ListItem divider className={classes.listItem} key={invite.uid}>
+                  <IconButton onClick={handlePublicKeyDialogClickOpen}>
+                    <AccountCircleIcon />
+                  </IconButton>
+                  <PublicKeyDialog
+                    open={openPublicKeyDialog}
+                    onClose={setOpenPublicKeyDialog}
+                    username={invite.fromUsername}
+                    getPublicKey={getPublicKey(invite)}
+                  />
+                  <ListItemText
+                    primary={invite.fromUsername}
+                    secondary={`${invite.fromUsername} wants to share an album with you.`}
+                  />
+                  <ListItemSecondaryAction>
+                    <Button
+                      className={classes.button}
+                      variant='outlined'
+                      color='secondary'
+                      aria-label='deny'
+                      size='small'
+                    >
+                      Deny
+                    </Button>
+                    <Button
+                      className={classes.button}
+                      edge='end'
+                      variant='contained'
+                      aria-label='accept'
+                      color='primary'
+                      size='small'
+                    >
+                      Accept
+                    </Button>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            </div>
+          </Grid>
+        ))}
       </Grid>
     </div>
   );

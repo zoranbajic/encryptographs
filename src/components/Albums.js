@@ -83,8 +83,6 @@ export default function Albums() {
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
 
-  const collectionManager = user.getCollectionManager();
-
   // If the user is not logged in, send them to the login page
   if (!userSession) {
     history.push('/login');
@@ -92,11 +90,14 @@ export default function Albums() {
   }
 
   useEffect(() => {
-    getAlbums();
+    if (userSession) {
+      getAlbums();
+    }
   }, []);
 
   // Get collection object and save it to state
   async function getAlbums() {
+    const collectionManager = user.getCollectionManager();
     try {
       albumCollections = await collectionManager.list('encryptograph.album');
       setAlbums(albumCollections);
@@ -115,6 +116,7 @@ export default function Albums() {
     // This closes the dialog window
     setOpen(false);
     if (value === 'Create') {
+      const collectionManager = user.getCollectionManager();
       try {
         // Creates a collection
         const collection = await collectionManager.create(
