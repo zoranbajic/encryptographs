@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import * as Etebase from 'etebase';
 import { useHistory, useLocation } from 'react-router';
-import { UserContext, UserSessionContext } from '../store';
+import { InviteContext, UserContext, UserSessionContext } from '../store';
 import { PublicKeyDialog } from '.';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 export default function InteractiveList() {
   const classes = useStyles();
   const location = useLocation();
-  const invites = location.state.invites;
+  const [invites, setInvites] = useContext(InviteContext);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
   const [openPublicKeyDialog, setOpenPublicKeyDialog] = useState(false);
@@ -54,6 +54,36 @@ export default function InteractiveList() {
   const handlePublicKeyDialogClickOpen = () => {
     setOpenPublicKeyDialog(true);
   };
+
+  async function getInvites() {
+    const invitationManager = user.getInvitationManager();
+    const invitations = await invitationManager.listIncoming();
+    setInvites(invitations);
+  }
+
+  async function handleAccept(invite) {
+    try {
+      const invitationManager = user.getInvitationManager();
+      await invitationManager.accept(invite);
+      getInvites();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('Invites: The invite was successfully accepted');
+    }
+  }
+
+  async function handleDeny(invite) {
+    try {
+      const invitationManager = user.getInvitationManager();
+      await invitationManager.reject(invite);
+      getInvites();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('Invites: The invite was successfully denied');
+    }
+  }
 
   function getPublicKey(invite) {
     const publicKey = invite.fromPubkey;
@@ -70,8 +100,6 @@ export default function InteractiveList() {
     return { lineOne, lineTwo, lineThree };
   }
 
-  console.log('Invites: Your state info is', invites);
-
   return (
     <div className={classes.paper}>
       <Grid
@@ -81,10 +109,10 @@ export default function InteractiveList() {
         alignItems='center'
       >
         {invites.data.map((invite) => (
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={12} key={invite.uid}>
             <div>
               <List>
-                <ListItem divider className={classes.listItem} key={invite.uid}>
+                <ListItem divider className={classes.listItem}>
                   <IconButton onClick={handlePublicKeyDialogClickOpen}>
                     <AccountCircleIcon />
                   </IconButton>
@@ -105,6 +133,9 @@ export default function InteractiveList() {
                       color='secondary'
                       aria-label='deny'
                       size='small'
+                      onClick={() => {
+                        handleDeny(invite);
+                      }}
                     >
                       Deny
                     </Button>
@@ -115,6 +146,9 @@ export default function InteractiveList() {
                       aria-label='accept'
                       color='primary'
                       size='small'
+                      onClick={() => {
+                        handleAccept(invite);
+                      }}
                     >
                       Accept
                     </Button>

@@ -48,8 +48,8 @@ export default function AlbumCard(props) {
     let albumCollection = {};
     try {
       albumCollection = await collectionManager.fetch(uid);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     } finally {
       return albumCollection;
     }
@@ -68,14 +68,7 @@ export default function AlbumCard(props) {
   };
 
   async function handleShareDialogClose(value, accessLevel) {
-    // Code to share goes here
     setOpenShareDialog(false);
-    console.log('AlbumCard: The share dialog value is', value);
-    console.log('AlbumCard: The share dialog user is', accessLevel.user);
-    console.log(
-      'AlbumCard: The share dialog access level is',
-      accessLevel.userAccess
-    );
     if (value === 'Send') {
       try {
         const invitationManager = user.getInvitationManager();
@@ -89,7 +82,7 @@ export default function AlbumCard(props) {
           Etebase.CollectionAccessLevel[accessLevel.userAccess]
         );
       } catch (err) {
-        console.log('The error was', err);
+        console.log(err);
       } finally {
         console.log('AlbumCard: Your invitation was successfully sent');
       }
@@ -110,9 +103,8 @@ export default function AlbumCard(props) {
           description: album.description,
         });
         await collectionManager.upload(albumCollection);
-      } catch (error) {
-        alert('An error occurred in editing your data');
-        console.log('Your editing error is ', error);
+      } catch (err) {
+        console.log(err);
       } finally {
         getAlbums();
       }
@@ -125,11 +117,11 @@ export default function AlbumCard(props) {
     // If the value is Agree, we delete the album and re-render Albums component
     if (value === 'Agree') {
       try {
-        const albumCollection = getAlbum(album.uid);
+        const albumCollection = await getAlbum(album.uid);
         albumCollection.delete();
         await collectionManager.upload(albumCollection);
-      } catch (error) {
-        alert('An error occured');
+      } catch (err) {
+        console.log(err);
       } finally {
         getAlbums();
       }
@@ -153,49 +145,55 @@ export default function AlbumCard(props) {
             </Typography>
           </CardContent>
         </CardActionArea>
-        <CardActions>
-          <IconButton
-            size='small'
-            color='primary'
-            onClick={handleShareDialogClickOpen}
-          >
-            <ShareIcon />
-          </IconButton>
-          <ShareInviteDialog
-            open={openShareDialog}
-            onClose={handleShareDialogClose}
-            nameValue={nameValue}
-          />
-          <div style={{ flex: '1 0 0' }} />
-          <IconButton
-            size='small'
-            color='primary'
-            onClick={handleAlbumDialogClickOpen}
-          >
-            <EditOutlined />
-          </IconButton>
-          <AlbumDialog
-            open={openAlbumDialog}
-            onClose={handleClose}
-            selectedValue={selectedValue}
-            album={albumMeta}
-            message={'Edit'}
-          />
-          <IconButton
-            size='small'
-            color='secondary'
-            onClick={handleDeleteDialogClickOpen}
-          >
-            <DeleteOutlined />
-          </IconButton>
-          <DeleteDialog
-            open={openDeleteDialog}
-            onClose={handleDeleteDialogClose}
-            selectedValue={selectedDeleteValue}
-            album={albumMeta}
-            message={'album'}
-          />
-        </CardActions>
+        {album.accessLevel !== 0 ? (
+          <CardActions>
+            <IconButton
+              size='small'
+              color='primary'
+              onClick={handleShareDialogClickOpen}
+            >
+              <ShareIcon />
+            </IconButton>
+            <ShareInviteDialog
+              open={openShareDialog}
+              onClose={handleShareDialogClose}
+              nameValue={nameValue}
+            />
+            <div style={{ flex: '1 0 0' }} />
+
+            <IconButton
+              size='small'
+              color='primary'
+              onClick={handleAlbumDialogClickOpen}
+            >
+              <EditOutlined />
+            </IconButton>
+
+            <AlbumDialog
+              open={openAlbumDialog}
+              onClose={handleClose}
+              selectedValue={selectedValue}
+              album={albumMeta}
+              message={'Edit'}
+            />
+
+            <IconButton
+              size='small'
+              color='secondary'
+              onClick={handleDeleteDialogClickOpen}
+            >
+              <DeleteOutlined />
+            </IconButton>
+
+            <DeleteDialog
+              open={openDeleteDialog}
+              onClose={handleDeleteDialogClose}
+              selectedValue={selectedDeleteValue}
+              album={albumMeta}
+              message={'album'}
+            />
+          </CardActions>
+        ) : null}
       </Card>
     </Grid>
   );

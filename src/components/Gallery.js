@@ -47,6 +47,7 @@ export default function Gallery(props) {
   const classes = useStyles();
   const location = useLocation();
   const { name, description, uid } = location.state.albumMeta;
+  const album = location.state.albumCollection;
   const [images, setImages] = useState([]);
   const [imageUids, setImageUids] = useState([]);
   let uidArray = [];
@@ -60,9 +61,7 @@ export default function Gallery(props) {
   let selectedDeleteValue = '';
 
   const collectionManager = user.getCollectionManager();
-  const photoManager = collectionManager.getItemManager(
-    location.state.albumCollection
-  );
+  const photoManager = collectionManager.getItemManager(album);
 
   // If the user is not logged in, send them to the login page
   if (!userSession) {
@@ -293,37 +292,39 @@ export default function Gallery(props) {
               <ImageGallery items={images} ref={galleryRef} />
             )}
           </Grid>
-          <Grid container item justifyContent='center'>
-            <label htmlFor='upload-images'>
-              <input
-                style={{ display: 'none' }}
-                id='upload-images'
-                name='upload-images'
-                type='file'
-                onChange={processFile}
-                multiple
-              />
-              <Button variant='contained' color='primary' component='span'>
-                Add Images
-              </Button>
-            </label>
-            <label htmlFor='delete-image'>
-              <Button
-                variant='contained'
-                color='primary'
-                component='span'
-                onClick={handleDeleteDialogClickOpen}
-              >
-                Delete Image
-              </Button>
-              <DeleteDialog
-                open={openDeleteDialog}
-                onClose={handleDeleteDialogClose}
-                selectedValue={selectedDeleteValue}
-                message={'image'}
-              />
-            </label>
-          </Grid>
+          {album.accessLevel !== 0 ? (
+            <Grid container item justifyContent='center'>
+              <label htmlFor='upload-images'>
+                <input
+                  style={{ display: 'none' }}
+                  id='upload-images'
+                  name='upload-images'
+                  type='file'
+                  onChange={processFile}
+                  multiple
+                />
+                <Button variant='contained' color='primary' component='span'>
+                  Add Images
+                </Button>
+              </label>
+              <label htmlFor='delete-image'>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  component='span'
+                  onClick={handleDeleteDialogClickOpen}
+                >
+                  Delete Image
+                </Button>
+                <DeleteDialog
+                  open={openDeleteDialog}
+                  onClose={handleDeleteDialogClose}
+                  selectedValue={selectedDeleteValue}
+                  message={'image'}
+                />
+              </label>
+            </Grid>
+          ) : null}
         </Grid>
       </div>
     </Container>

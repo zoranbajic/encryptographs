@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { UserContext, UserSessionContext } from '../store';
+import { InviteContext, UserContext, UserSessionContext } from '../store';
 import { DrawerMenu } from '.';
 import {
   AppBar,
@@ -63,9 +63,9 @@ export default function Navbar() {
   // Pull in our state from Context
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
+  const [invites, setInvites] = useContext(InviteContext);
 
-  const [invites, setInvites] = useState({});
-  const [numberOfInvites, setNumberOfInvites] = useState(0);
+  // const [numberOfInvites, setNumberOfInvites] = useState(0);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -157,12 +157,9 @@ export default function Navbar() {
   }
 
   async function getInvites() {
-    const delimiter = '   ';
     const invitationManager = user.getInvitationManager();
     const invitations = await invitationManager.listIncoming();
-    console.log('Navbar: Your invitations are', invitations);
     setInvites(invitations);
-    setNumberOfInvites(invitations.data.length);
   }
 
   return (
@@ -189,15 +186,15 @@ export default function Navbar() {
             <div>
               <div className={classes.sectionDesktop}>
                 <IconButton
-                  aria-label='show 4 new mails'
+                  aria-label='show new invites'
                   color='inherit'
                   component={RouterLink}
-                  to={{
-                    pathname: '/invites',
-                    state: { invites: invites },
-                  }}
+                  to={'/invites'}
                 >
-                  <Badge badgeContent={numberOfInvites} color='secondary'>
+                  <Badge
+                    badgeContent={!invites.data ? 0 : invites.data.length}
+                    color='secondary'
+                  >
                     <MailIcon />
                   </Badge>
                 </IconButton>

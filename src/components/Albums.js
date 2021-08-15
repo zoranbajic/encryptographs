@@ -101,9 +101,8 @@ export default function Albums() {
     try {
       albumCollections = await collectionManager.list('encryptograph.album');
       setAlbums(albumCollections);
-      console.log('Albums: Your albums are', albumCollections);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   }
 
