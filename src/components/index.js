@@ -10,3 +10,7 @@ export { default as Albums } from './Albums';
 export { default as Gallery } from './Gallery';
 export { default as Navbar } from './Navbar';
 export { default as Signup } from './Signup';
+export { default as PublicKey } from './PublicKey';
+export { default as ShareInviteDialog } from './ShareInviteDialog';
+export { default as Invites } from './Invites';
+export { default as PublicKeyDialog } from './PublicKeyDialog';

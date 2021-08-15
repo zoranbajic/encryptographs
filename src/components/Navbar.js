@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import * as Etebase from 'etebase';
 import { useHistory } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { UserContext } from '../store';
-import { UserSessionContext } from '../store';
+import { InviteContext, UserContext, UserSessionContext } from '../store';
 import { DrawerMenu } from '.';
 import {
   AppBar,
@@ -58,6 +58,15 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const history = useHistory();
+
+  // Pull in our state from Context
+  const [user, setUser] = useContext(UserContext);
+  const [userSession, setUserSession] = useContext(UserSessionContext);
+  const [invites, setInvites] = useContext(InviteContext);
+
+  // const [numberOfInvites, setNumberOfInvites] = useState(0);
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -88,6 +97,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={ChangePassword}>Change Password</MenuItem>
+      <MenuItem onClick={PublicKey}>View Public Key</MenuItem>
       <MenuItem onClick={Logout}>Logout</MenuItem>
     </Menu>
   );
@@ -104,12 +114,11 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label='show 4 new mails' color='inherit'>
+        <IconButton aria-label='show new invites' color='inherit'>
           <Badge badgeContent={4} color='secondary'>
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -125,15 +134,11 @@ export default function Navbar() {
     </Menu>
   );
 
-  const history = useHistory();
-
-  // Pull in our state from Context
-  const [user, setUser] = useContext(UserContext);
-  const [userSession, setUserSession] = useContext(UserSessionContext);
+  useEffect(() => {
+    user !== '' ? getInvites() : null;
+  }, [user]);
 
   async function Logout() {
-    // setAnchorEl(null);
-    // handleMobileMenuClose();
     handleMenuClose();
     await user.logout();
     setUserSession('');
@@ -146,18 +151,21 @@ export default function Navbar() {
     history.push('/changepassword');
   }
 
+  function PublicKey() {
+    handleMenuClose();
+    history.push('/publickey');
+  }
+
+  async function getInvites() {
+    const invitationManager = user.getInvitationManager();
+    const invitations = await invitationManager.listIncoming();
+    setInvites(invitations);
+  }
+
   return (
     <div className={classes.grow}>
       <AppBar position='static' style={{ position: 'fixed', top: 0, left: 0 }}>
         <Toolbar>
-          {/* <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='open drawer'
-          >
-            <MenuIcon />
-          </IconButton> */}
           <DrawerMenu />
           <Typography variant='h6' className={classes.title} noWrap>
             <Link color='inherit' component={RouterLink} to={'/'}>
@@ -177,8 +185,16 @@ export default function Navbar() {
           ) : (
             <div>
               <div className={classes.sectionDesktop}>
-                <IconButton aria-label='show 4 new mails' color='inherit'>
-                  <Badge badgeContent={4} color='secondary'>
+                <IconButton
+                  aria-label='show new invites'
+                  color='inherit'
+                  component={RouterLink}
+                  to={'/invites'}
+                >
+                  <Badge
+                    badgeContent={!invites.data ? 0 : invites.data.length}
+                    color='secondary'
+                  >
                     <MailIcon />
                   </Badge>
                 </IconButton>

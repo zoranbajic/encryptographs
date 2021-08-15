@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -12,6 +12,7 @@ import {
 import HomeIcon from '@material-ui/icons/Home';
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
 import MenuIcon from '@material-ui/icons/Menu';
+import { UserSessionContext } from '../store';
 
 const useStyles = makeStyles({
   list: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles({
 
 export default function DrawerMenu() {
   const classes = useStyles();
+  const [userSession, setUserSession] = useContext(UserSessionContext);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleDrawer = (open) => (event) => {
@@ -57,17 +59,19 @@ export default function DrawerMenu() {
                 </ListItemIcon>
                 <ListItemText primary={'Home'} />
               </ListItem>
-              <ListItem
-                button
-                component={RouterLink}
-                to={'/albums'}
-                key={'View Albums'}
-              >
-                <ListItemIcon>
-                  <PhotoAlbumIcon />
-                </ListItemIcon>
-                <ListItemText primary={'View Albums'} />
-              </ListItem>
+              {!userSession ? null : (
+                <ListItem
+                  button
+                  component={RouterLink}
+                  to={'/albums'}
+                  key={'View Albums'}
+                >
+                  <ListItemIcon>
+                    <PhotoAlbumIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={'View Albums'} />
+                </ListItem>
+              )}
             </List>
           </div>
         </Drawer>
