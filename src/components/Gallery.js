@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext, UserSessionContext } from '../store';
+import { UserContext, UserSessionContext } from '../context';
 
 const useStyles = makeStyles((theme) => ({
   paper: {

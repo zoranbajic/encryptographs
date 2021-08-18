@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { InviteContext, UserContext, UserSessionContext } from '../store';
+import { InviteContext, UserContext, UserSessionContext } from '../context';
 import { DrawerMenu } from '.';
 import {
   AppBar,

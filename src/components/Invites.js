@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import * as Etebase from 'etebase';
 import { useHistory, useLocation } from 'react-router';
-import { InviteContext, UserContext, UserSessionContext } from '../store';
+import { InviteContext, UserContext, UserSessionContext } from '../context';
 import { PublicKeyDialog } from '.';
 import { makeStyles } from '@material-ui/core/styles';
 import {

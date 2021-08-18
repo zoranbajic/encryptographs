@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import cryptico from 'cryptico';
-import { UserContext, UserSessionContext } from '../store';
+import { UserContext, UserSessionContext } from '../context';
 import Avatar from '@material-ui/core/Avatar';
 import Backdrop from '@material-ui/core/Backdrop';
 import Box from '@material-ui/core/Box';

@@ -5,7 +5,7 @@ export const UserContext = React.createContext();
 export const UserSessionContext = React.createContext();
 export const InviteContext = React.createContext();
 
-const Store = ({ children }) => {
+const Context = ({ children }) => {
   const initialUser = '';
   const initialUserSession = '';
   const initialInvites = 0;
@@ -50,4 +50,4 @@ const Store = ({ children }) => {
   );
 };
 
-export default Store;
+export default Context;

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import { AlbumCard, AlbumDialog } from '../components';
-import { UserContext, UserSessionContext } from '../store';
+import { UserContext, UserSessionContext } from '../context';
 import {
   Avatar,
   Backdrop,

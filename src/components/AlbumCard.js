@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { AlbumDialog, DeleteDialog, ShareInviteDialog } from '.';
 import { Link as RouterLink } from 'react-router-dom';
-import { UserContext, UserSessionContext } from '../store';
+import { UserContext, UserSessionContext } from '../context';
 import * as Etebase from 'etebase';
 import { makeStyles } from '@material-ui/core/styles';
 import {
