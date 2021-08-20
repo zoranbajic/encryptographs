@@ -2,21 +2,23 @@ import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import cryptico from 'cryptico';
-import { UserContext, UserSessionContext } from '../store';
-import Avatar from '@material-ui/core/Avatar';
-import Backdrop from '@material-ui/core/Backdrop';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Link from '@material-ui/core/Link';
+import { UserContext, UserSessionContext } from '../context';
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Link,
+  Snackbar,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
-import Snackbar from '@material-ui/core/Snackbar';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -72,7 +74,6 @@ export default function ConfirmPassword() {
   const history = useHistory();
 
   async function Submit(evt) {
-    let savedSession;
     let currentUser;
     try {
       // Prevent the default action of refreshing the page
@@ -97,11 +98,6 @@ export default function ConfirmPassword() {
       if (currentUser) {
         setUser(currentUser);
       } else {
-        // alert('Your password was not correct.');
-        // setUserSession('');
-        // await currentUser.logout();
-        // setUserSession('');
-        // setUser('');
         history.push('/');
       }
     }

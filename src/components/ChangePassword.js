@@ -1,16 +1,18 @@
 import React, { useState, useContext } from 'react';
 import * as Etebase from 'etebase';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Link,
+  TextField,
+  Typography,
+} from '@material-ui/core/';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext } from '../store';
-import Container from '@material-ui/core/Container';
+import { UserContext } from '../context';
 
 function Copyright() {
   return (
@@ -70,8 +72,8 @@ export default function ChangePassword() {
         );
         await etebase.changePassword(formInfo.confirmNewPassword);
       }
-    } catch (error) {
-      console.log('Your error is', error);
+    } catch (err) {
+      console.log(err);
       // Show error message if passwords do not match
       setShowError(true);
     } finally {

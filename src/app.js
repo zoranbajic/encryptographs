@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-import * as Etebase from 'etebase';
 import { ConfirmPassword, Navbar } from './components';
-import { UserContext, UserSessionContext } from './store';
+import { UserContext, UserSessionContext } from './context';
 import Routes from './routes';
 
 export default function App() {

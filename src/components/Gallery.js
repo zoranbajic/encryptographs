@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { DeleteDialog } from '.';
-import * as Etebase from 'etebase';
 import { Base64 } from 'js-base64';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
@@ -13,7 +12,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext, UserSessionContext } from '../store';
+import { UserContext, UserSessionContext } from '../context';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Gallery(props) {
   const classes = useStyles();
   const location = useLocation();
-  const { name, description, uid } = location.state.albumMeta;
+  const { name } = location.state.albumMeta;
   const album = location.state.albumCollection;
   const [images, setImages] = useState([]);
   const [imageUids, setImageUids] = useState([]);

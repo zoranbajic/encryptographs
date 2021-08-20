@@ -12,7 +12,7 @@ import {
 import HomeIcon from '@material-ui/icons/Home';
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
 import MenuIcon from '@material-ui/icons/Menu';
-import { UserSessionContext } from '../store';
+import { UserSessionContext } from '../context';
 
 const useStyles = makeStyles({
   list: {

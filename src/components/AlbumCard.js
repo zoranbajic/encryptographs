@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { AlbumDialog, DeleteDialog, ShareInviteDialog } from '.';
 import { Link as RouterLink } from 'react-router-dom';
-import { UserContext, UserSessionContext } from '../store';
+import { UserContext } from '../context';
 import * as Etebase from 'etebase';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -12,13 +12,11 @@ import {
   CardHeader,
   Grid,
   IconButton,
+  Typography,
 } from '@material-ui/core/';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
-import { EditOutlined } from '@material-ui/icons';
+import EditOutlined from '@material-ui/icons/EditOutlined';
 import ShareIcon from '@material-ui/icons/Share';
-import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
   root: {
