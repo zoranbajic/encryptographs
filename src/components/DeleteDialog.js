@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core/';
 
 export default function DeleteDialog(props) {
-  // const [open, setOpen] = useState(false);
   const { open, onClose, selectedValue, album, message } = props;
 
   const handleButtonClick = (value) => {

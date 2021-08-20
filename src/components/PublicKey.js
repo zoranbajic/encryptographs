@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import * as Etebase from 'etebase';
 import { makeStyles } from '@material-ui/core/styles';
-import { UserContext, UserSessionContext } from '../context';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import { UserContext } from '../context';
+import { Grid, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PublicKey() {
   const [user, setUser] = useContext(UserContext);
-  const [userSession, setUserSession] = useContext(UserSessionContext);
   const classes = useStyles();
 
   const invitationManager = user.getInvitationManager();

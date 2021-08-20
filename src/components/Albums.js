@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import * as Etebase from 'etebase';
-import { AlbumCard, AlbumDialog } from '../components';
+import { AlbumCard, AlbumDialog } from '.';
 import { UserContext, UserSessionContext } from '../context';
 import {
   Avatar,
@@ -11,19 +10,11 @@ import {
   CircularProgress,
   Container,
   CssBaseline,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
   Link,
-  Paper,
   Snackbar,
-  TextField,
   Typography,
 } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
 import PhotoAlbumOutlinedIcon from '@material-ui/icons/PhotoAlbumOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -129,8 +120,8 @@ export default function Albums() {
         // Uploads the collection
         await collectionManager.upload(collection);
         console.log('Albums - Your album was created', collection);
-      } catch (error) {
-        alert('Some error occurred');
+      } catch (err) {
+        console.log(err);
       } finally {
         getAlbums();
       }

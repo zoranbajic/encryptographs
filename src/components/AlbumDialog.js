@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AlbumDialog(props) {
-  const classes = useStyles();
   const { onClose, selectedValue, open, album, message } = props;
   const [albumInfo, setAlbumInfo] = useState({
     name: album.name || '',

@@ -1,19 +1,18 @@
 import React, { useContext, useState } from 'react';
 import * as Etebase from 'etebase';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory } from 'react-router';
 import { InviteContext, UserContext, UserSessionContext } from '../context';
 import { PublicKeyDialog } from '.';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Avatar,
   Button,
   Grid,
   IconButton,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Typography,
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
@@ -34,11 +33,13 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     paddingRight: '200px',
   },
+  centerColumn: {
+    height: 750,
+  },
 }));
 
 export default function InteractiveList() {
   const classes = useStyles();
-  const location = useLocation();
   const [invites, setInvites] = useContext(InviteContext);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
@@ -100,6 +101,9 @@ export default function InteractiveList() {
     return { lineOne, lineTwo, lineThree };
   }
 
+  console.log('Invites: Your invites are', invites);
+  console.log('Invites: The number of keys are', Object.keys(invites).length);
+
   return (
     <div className={classes.paper}>
       <Grid
@@ -108,56 +112,60 @@ export default function InteractiveList() {
         justifyContent='center'
         alignItems='center'
       >
-        {invites.data.map((invite) => (
-          <Grid item xs={12} md={12} key={invite.uid}>
-            <div>
-              <List>
-                <ListItem divider className={classes.listItem}>
-                  <IconButton onClick={handlePublicKeyDialogClickOpen}>
-                    <AccountCircleIcon />
-                  </IconButton>
-                  <PublicKeyDialog
-                    open={openPublicKeyDialog}
-                    onClose={setOpenPublicKeyDialog}
-                    username={invite.fromUsername}
-                    getPublicKey={getPublicKey(invite)}
-                  />
-                  <ListItemText
-                    primary={invite.fromUsername}
-                    secondary={`${invite.fromUsername} wants to share an album with you.`}
-                  />
-                  <ListItemSecondaryAction>
-                    <Button
-                      className={classes.button}
-                      variant='outlined'
-                      color='secondary'
-                      aria-label='deny'
-                      size='small'
-                      onClick={() => {
-                        handleDeny(invite);
-                      }}
-                    >
-                      Deny
-                    </Button>
-                    <Button
-                      className={classes.button}
-                      edge='end'
-                      variant='contained'
-                      aria-label='accept'
-                      color='primary'
-                      size='small'
-                      onClick={() => {
-                        handleAccept(invite);
-                      }}
-                    >
-                      Accept
-                    </Button>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            </div>
-          </Grid>
-        ))}
+        {invites.data.length !== 0 ? (
+          invites.data.map((invite) => (
+            <Grid item xs={12} md={12} key={invite.uid}>
+              <div>
+                <List>
+                  <ListItem divider className={classes.listItem}>
+                    <IconButton onClick={handlePublicKeyDialogClickOpen}>
+                      <AccountCircleIcon />
+                    </IconButton>
+                    <PublicKeyDialog
+                      open={openPublicKeyDialog}
+                      onClose={setOpenPublicKeyDialog}
+                      username={invite.fromUsername}
+                      getPublicKey={getPublicKey(invite)}
+                    />
+                    <ListItemText
+                      primary={invite.fromUsername}
+                      secondary={`${invite.fromUsername} wants to share an album with you.`}
+                    />
+                    <ListItemSecondaryAction>
+                      <Button
+                        className={classes.button}
+                        variant='outlined'
+                        color='secondary'
+                        aria-label='deny'
+                        size='small'
+                        onClick={() => {
+                          handleDeny(invite);
+                        }}
+                      >
+                        Deny
+                      </Button>
+                      <Button
+                        className={classes.button}
+                        edge='end'
+                        variant='contained'
+                        aria-label='accept'
+                        color='primary'
+                        size='small'
+                        onClick={() => {
+                          handleAccept(invite);
+                        }}
+                      >
+                        Accept
+                      </Button>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+              </div>
+            </Grid>
+          ))
+        ) : (
+          <Typography variant='h5'>You do not have any invites</Typography>
+        )}
       </Grid>
     </div>
   );

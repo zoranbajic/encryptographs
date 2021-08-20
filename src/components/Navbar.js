@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import * as Etebase from 'etebase';
+import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { InviteContext, UserContext, UserSessionContext } from '../context';
 import { DrawerMenu } from '.';
 import {
@@ -18,9 +17,7 @@ import {
 } from '@material-ui/core/';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const useStyles = makeStyles((theme) => ({
   grow: {

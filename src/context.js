@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import * as Etebase from 'etebase';
 
 export const UserContext = React.createContext();
 export const UserSessionContext = React.createContext();
@@ -8,7 +7,7 @@ export const InviteContext = React.createContext();
 const Context = ({ children }) => {
   const initialUser = '';
   const initialUserSession = '';
-  const initialInvites = 0;
+  const initialInvites = {};
 
   // Pulls the session ID from sessionStorage (if it exists)
   const localSession = JSON.parse(sessionStorage.getItem('sessionInfo'));
