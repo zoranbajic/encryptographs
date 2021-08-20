@@ -69,8 +69,6 @@ export default function InteractiveList() {
       getInvites();
     } catch (err) {
       console.log(err);
-    } finally {
-      console.log('Invites: The invite was successfully accepted');
     }
   }
 
@@ -81,8 +79,6 @@ export default function InteractiveList() {
       getInvites();
     } catch (err) {
       console.log(err);
-    } finally {
-      console.log('Invites: The invite was successfully denied');
     }
   }
 
@@ -100,9 +96,6 @@ export default function InteractiveList() {
 
     return { lineOne, lineTwo, lineThree };
   }
-
-  console.log('Invites: Your invites are', invites);
-  console.log('Invites: The number of keys are', Object.keys(invites).length);
 
   return (
     <div className={classes.paper}>
