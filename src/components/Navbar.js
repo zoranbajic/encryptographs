@@ -111,11 +111,20 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label='show new invites' color='inherit'>
-          <Badge badgeContent={4} color='secondary'>
+        <IconButton
+          aria-label='show new invites'
+          color='inherit'
+          component={RouterLink}
+          to={'/invites'}
+        >
+          <Badge
+            badgeContent={!invites.data ? 0 : invites.data.length}
+            color='secondary'
+          >
             <MailIcon />
           </Badge>
         </IconButton>
+        <p>Invites</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
