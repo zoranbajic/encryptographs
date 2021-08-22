@@ -147,9 +147,9 @@ export default function Navbar() {
   async function Logout() {
     handleMenuClose();
     await user.logout();
+    history.push('/');
     setUserSession('');
     setUser('');
-    history.push('/');
   }
 
   function ChangePassword() {
@@ -163,9 +163,13 @@ export default function Navbar() {
   }
 
   async function getInvites() {
-    const invitationManager = user.getInvitationManager();
-    const invitations = await invitationManager.listIncoming();
-    setInvites(invitations);
+    try {
+      const invitationManager = user.getInvitationManager();
+      const invitations = await invitationManager.listIncoming();
+      setInvites(invitations);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (

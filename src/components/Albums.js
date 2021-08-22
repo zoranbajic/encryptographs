@@ -4,10 +4,8 @@ import { AlbumCard, AlbumDialog } from '.';
 import { UserContext, UserSessionContext } from '../context';
 import {
   Avatar,
-  Backdrop,
   Box,
   Button,
-  CircularProgress,
   Container,
   CssBaseline,
   Grid,
@@ -18,6 +16,10 @@ import {
 import PhotoAlbumOutlinedIcon from '@material-ui/icons/PhotoAlbumOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
 
 function Copyright() {
   return (
@@ -73,6 +75,7 @@ export default function Albums() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
+  const [showError, setShowError] = useState(false);
 
   // If the user is not logged in, send them to the login page
   if (!userSession) {
@@ -94,6 +97,7 @@ export default function Albums() {
       setAlbums(albumCollections);
     } catch (err) {
       console.log(err);
+      setShowError(true);
     }
   }
 
@@ -119,7 +123,6 @@ export default function Albums() {
         );
         // Uploads the collection
         await collectionManager.upload(collection);
-        console.log('Albums - Your album was created', collection);
       } catch (err) {
         console.log(err);
       } finally {
@@ -127,6 +130,13 @@ export default function Albums() {
       }
     }
   }
+
+  const handleErrorClose = (evt, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowError(false);
+  };
 
   return (
     <div>
@@ -164,14 +174,15 @@ export default function Albums() {
           <Box mt={8}>
             <Copyright />
           </Box>
-          {/* <Backdrop className={classes.backdrop} open={showProgress}>
-        <CircularProgress color='primary' />
-      </Backdrop>
-      <Snackbar open={showError} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='error'>
-          Your username or password is incorrect.
-        </Alert>
-      </Snackbar> */}
+          <Snackbar
+            open={showError}
+            autoHideDuration={6000}
+            onClose={handleErrorClose}
+          >
+            <Alert onClose={handleClose} severity='error'>
+              You must confirm your email address before you can create albums.
+            </Alert>
+          </Snackbar>
         </Container>
       ) : (
         <div>

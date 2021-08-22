@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
+import cryptico from 'cryptico';
+import { UserContext, UserSessionContext } from '../context';
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Link,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 
 function Copyright() {
   return (
@@ -35,6 +42,10 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -53,43 +64,70 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
   });
+  const [user, setUser] = useContext(UserContext);
+  const [userSession, setUserSession] = useContext(UserSessionContext);
+  const [showProgress, setShowProgress] = useState(false);
+  const history = useHistory();
+
   async function Submit(evt) {
+    let savedSession;
     // Prevent the default action of refreshing the page
-    evt.preventDefault();
-    const formData = {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-    };
-    if (formData.confirmPassword !== formData.password) {
-      alert('Your passwords do not match');
+    try {
+      evt.preventDefault();
+      // Show the loading dialog
+      setShowProgress(true);
+      const formData = {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      };
+      if (formData.confirmPassword !== formData.password) {
+        alert('Your passwords do not match');
+      }
+      // Creates the account
+      const eteBaseUser = await Etebase.Account.signup(
+        {
+          username: formData.username,
+          email: formData.email,
+        },
+        formData.password,
+        serverUrl
+      );
+
+      // Logs in the user
+      const etebase = await Etebase.Account.login(
+        formData.username,
+        formData.password,
+        serverUrl
+      );
+
+      // Create encryption key to encrypt the session
+      const RSAkey = cryptico.generateRSAKey(formData.password, 186);
+      const encryptionKey = cryptico.publicKeyString(RSAkey);
+
+      // Save the session and assign it and the user to the respective state
+      // values
+      savedSession = await etebase.save(encryptionKey);
+      setUser(etebase);
+      setUserSession(savedSession);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      // Clear the inputs after the button is pressed
+      // Hide the progress dialog
+      setShowProgress(false);
+      // Clear the form and go back to the login page
+      setData({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+      history.push('/albums');
     }
-    // Creates the account
-    const eteBaseUser = await Etebase.Account.signup(
-      {
-        username: formData.username,
-        email: formData.email,
-      },
-      formData.password,
-      serverUrl
-    );
-
-    // Logs in the user
-    const etebase = await Etebase.Account.login(
-      formData.username,
-      formData.password,
-      serverUrl
-    );
-
-    // Clear the inputs after the button is pressed
-    setData({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
   }
+
   const handleChange = (evt) => {
     evt.persist();
     setData({ ...data, [evt.target.name]: evt.target.value });
@@ -171,6 +209,9 @@ export default function Signup() {
       <Box mt={8}>
         <Copyright />
       </Box>
+      <Backdrop className={classes.backdrop} open={showProgress}>
+        <CircularProgress color='primary' />
+      </Backdrop>
     </Container>
   );
 }
