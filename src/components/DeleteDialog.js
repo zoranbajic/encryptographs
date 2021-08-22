@@ -39,14 +39,14 @@ export default function DeleteDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleButtonClick('Disagree')} color='primary'>
-            Disagree
+            No
           </Button>
           <Button
             onClick={() => handleButtonClick('Agree')}
             color='primary'
             autoFocus
           >
-            Agree
+            Yes
           </Button>
         </DialogActions>
       </Dialog>
