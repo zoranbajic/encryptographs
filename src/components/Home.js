@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserContext, UserSessionContext } from '../context';
+import { Features } from '.';
 import { Button, Container, Grid, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mainContent: {
     marginTop: theme.spacing(10),
+    marginBottom: theme.spacing(10),
     padding: theme.spacing(8, 0, 6),
   },
 }));
@@ -26,20 +28,6 @@ const Home = () => {
   const classes = useStyles();
 
   return (
-    // <Grid container direction='column' align='center'>
-    //   <Grid
-    //     item
-    //     container
-    //     className={classes.centerColumn}
-    //     direction='column'
-    //     display='flex'
-    //     justifyContent='center'
-    //   >
-    //     <Typography variant='h2'>
-    // {userSession && user ? `Welcome ${user.user.username}!` : `Welcome`}
-    //     </Typography>
-    //   </Grid>
-    // </Grid>
     <main>
       <div className={classes.mainContent}>
         <Container maxWidth='sm'>
@@ -90,15 +78,11 @@ const Home = () => {
                   </Button>
                 </Grid>
               )}
-              {/* <Grid item>
-                <Button variant='outlined' color='Primary'>
-                  Login
-                </Button>
-              </Grid> */}
             </Grid>
           </div>
         </Container>
       </div>
+      <Features />
     </main>
   );
 };
