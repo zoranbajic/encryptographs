@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserContext, UserSessionContext } from '../context';
-import { Features } from '.';
+import { Features, HowGetStarted, Technologies } from '.';
 import { Button, Container, Grid, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   mainContent: {
     marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(10),
+    marginBottom: theme.spacing(2),
     padding: theme.spacing(8, 0, 6),
   },
 }));
@@ -33,7 +33,7 @@ const Home = () => {
         <Container maxWidth='sm'>
           <Typography
             component='h1'
-            variant='h2'
+            variant='h3'
             align='center'
             color='textPrimary'
             gutterBottom
@@ -83,6 +83,8 @@ const Home = () => {
         </Container>
       </div>
       <Features />
+      <HowGetStarted />
+      <Technologies />
     </main>
   );
 };

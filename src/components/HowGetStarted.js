@@ -1,16 +1,5 @@
 import React from 'react';
 import { Box, Container, Grid, Typography } from '@material-ui/core';
-import ScreenLockLandscapeIcon from '@material-ui/icons/ScreenLockLandscape';
-import LockIcon from '@material-ui/icons/Lock';
-import lock from '../assets/lock.svg';
-import photo from '../assets/photo.svg';
-import shield from '../assets/shield.svg';
-import lockRed from '../assets/lock_red.svg';
-import shieldRed from '../assets/shield_red.svg';
-import photoRed from '../assets/photo_red.svg';
-import lockBlue from '../assets/lock_blue.svg';
-import shieldBlue from '../assets/shield_blue.svg';
-import photoBlue from '../assets/photo_blue.svg';
 
 const item = {
   display: 'flex',
@@ -19,70 +8,75 @@ const item = {
   px: 5,
 };
 
-export default function Features() {
+export default function HowGetStarted() {
   return (
     <Box
       component='section'
       sx={{
         display: 'flex',
         overflow: 'hidden',
-        bgcolor: '#fafbfd',
+        // bgcolor: '#e8eaf6',
         padding: 60,
       }}
     >
       <Container sx={{ mt: 15, mb: 30, display: 'flex', position: 'relative' }}>
+        <Typography variant='h6'>
+          <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
+            HOW TO GET STARTED
+          </Box>
+        </Typography>
         <Grid container spacing={5}>
           <Grid item xs={12} md={4}>
             <Box sx={item}>
-              <Box
+              {/* <Box
                 component='img'
                 src={lockRed}
                 alt='lock'
                 sx={{ height: 55 }}
-              />
+              /> */}
               <Typography>
                 <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
-                  END-TO-END ENCRYPTED
+                  1.
                 </Box>
               </Typography>
               <Typography variant='body1'>
-                {`Because your data is encrypted before it leaves your computer, even we can't see it.`}
+                {`Create an account and confirm your email address so that you can begin creating albums and uploading photos.`}
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
             <Box sx={item}>
-              <Box
+              {/* <Box
                 component='img'
                 src={shieldRed}
                 alt='shield'
                 sx={{ height: 55 }}
-              />
+              /> */}
               <Typography>
                 <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
-                  WE TAKE PRIVACY SERIOUSLY
+                  2.
                 </Box>
               </Typography>
               <Typography variant='body1'>
-                {`We don't collect personal data, track you, or use cookies.`}
+                {`Tell your friends and family about Encryptographs and ask them to create accounts of their own.`}
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
             <Box sx={item}>
-              <Box
+              {/* <Box
                 component='img'
                 src={photoRed}
                 alt='photo'
                 sx={{ height: 55 }}
-              />
+              /> */}
               <Typography>
                 <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
-                  LOSSLESS STORAGE
+                  3.
                 </Box>
               </Typography>
               <Typography variant='body1'>
-                {`Your photos are not compressed in any way. What you upload is what you will see.`}
+                {`Once they've shared their username with you, you can send invites to them to view your albums.`}
               </Typography>
             </Box>
           </Grid>
