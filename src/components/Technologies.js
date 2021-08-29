@@ -44,15 +44,9 @@ export default function Technologies() {
                   alt='eteBase'
                   sx={{ height: 55 }}
                 />
-                <Typography>
-                  <Box
-                    margin={3}
-                    textAlign='center'
-                    fontWeight='fontWeightBold'
-                  >
-                    Etebase
-                  </Box>
-                </Typography>
+                <Box margin={3} textAlign='center'>
+                  <Typography style={{ fontWeight: 600 }}>Etebase</Typography>
+                </Box>
               </Box>
             </Link>
           </Grid>
@@ -68,15 +62,11 @@ export default function Technologies() {
                   alt='JavaScript'
                   sx={{ height: 55 }}
                 />
-                <Typography>
-                  <Box
-                    margin={3}
-                    textAlign='center'
-                    fontWeight='fontWeightBold'
-                  >
+                <Box margin={3} textAlign='center'>
+                  <Typography style={{ fontWeight: 600 }}>
                     JavaScript
-                  </Box>
-                </Typography>
+                  </Typography>
+                </Box>
               </Box>
             </Link>
           </Grid>
@@ -89,15 +79,9 @@ export default function Technologies() {
                   alt='React'
                   sx={{ height: 55 }}
                 />
-                <Typography>
-                  <Box
-                    margin={3}
-                    textAlign='center'
-                    fontWeight='fontWeightBold'
-                  >
-                    React
-                  </Box>
-                </Typography>
+                <Box margin={3} textAlign='center'>
+                  <Typography style={{ fontWeight: 600 }}>React</Typography>
+                </Box>
               </Box>
             </Link>
           </Grid>
@@ -110,15 +94,11 @@ export default function Technologies() {
                   alt='Material UI'
                   sx={{ height: 55 }}
                 />
-                <Typography>
-                  <Box
-                    margin={3}
-                    textAlign='center'
-                    fontWeight='fontWeightBold'
-                  >
+                <Box margin={3} textAlign='center'>
+                  <Typography style={{ fontWeight: 600 }}>
                     Material UI
-                  </Box>
-                </Typography>
+                  </Typography>
+                </Box>
               </Box>
             </Link>
           </Grid>

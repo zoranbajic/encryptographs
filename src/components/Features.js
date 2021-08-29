@@ -1,16 +1,8 @@
 import React from 'react';
 import { Box, Container, Grid, Typography } from '@material-ui/core';
-import ScreenLockLandscapeIcon from '@material-ui/icons/ScreenLockLandscape';
-import LockIcon from '@material-ui/icons/Lock';
-import lock from '../assets/lock.svg';
-import photo from '../assets/photo.svg';
-import shield from '../assets/shield.svg';
 import lockRed from '../assets/lock_red.svg';
 import shieldRed from '../assets/shield_red.svg';
 import photoRed from '../assets/photo_red.svg';
-import lockBlue from '../assets/lock_blue.svg';
-import shieldBlue from '../assets/shield_blue.svg';
-import photoBlue from '../assets/photo_blue.svg';
 
 const item = {
   display: 'flex',
@@ -40,11 +32,12 @@ export default function Features() {
                 alt='lock'
                 sx={{ height: 55 }}
               />
-              <Typography>
-                <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
+
+              <Box margin={3} textAlign='center'>
+                <Typography style={{ fontWeight: 600 }}>
                   END-TO-END ENCRYPTED
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
               <Typography variant='body1'>
                 {`Because your data is encrypted before it leaves your computer, even we can't see it.`}
               </Typography>
@@ -58,11 +51,11 @@ export default function Features() {
                 alt='shield'
                 sx={{ height: 55 }}
               />
-              <Typography>
-                <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
+              <Box margin={3} textAlign='center'>
+                <Typography style={{ fontWeight: 600 }}>
                   WE TAKE PRIVACY SERIOUSLY
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
               <Typography variant='body1'>
                 {`We don't collect personal data, track you, or use cookies.`}
               </Typography>
@@ -76,11 +69,11 @@ export default function Features() {
                 alt='photo'
                 sx={{ height: 55 }}
               />
-              <Typography>
-                <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
+              <Box margin={3} textAlign='center'>
+                <Typography style={{ fontWeight: 600 }}>
                   LOSSLESS STORAGE
-                </Box>
-              </Typography>
+                </Typography>
+              </Box>
               <Typography variant='body1'>
                 {`Your photos are not compressed in any way. What you upload is what you will see.`}
               </Typography>

@@ -20,11 +20,11 @@ export default function HowGetStarted() {
       }}
     >
       <Container sx={{ mt: 15, mb: 30, display: 'flex', position: 'relative' }}>
-        <Typography variant='h6'>
-          <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
+        <Box margin={3} textAlign='center'>
+          <Typography variant='h6' style={{ fontWeight: 600 }}>
             HOW TO GET STARTED
-          </Box>
-        </Typography>
+          </Typography>
+        </Box>
         <Grid container spacing={5}>
           <Grid item xs={12} md={4}>
             <Box sx={item}>
@@ -34,11 +34,9 @@ export default function HowGetStarted() {
                 alt='lock'
                 sx={{ height: 55 }}
               /> */}
-              <Typography>
-                <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
-                  1.
-                </Box>
-              </Typography>
+              <Box margin={3} textAlign='center'>
+                <Typography style={{ fontWeight: 600 }}>1.</Typography>
+              </Box>
               <Typography variant='body1'>
                 {`Create an account and confirm your email address so that you can begin creating albums and uploading photos.`}
               </Typography>
@@ -52,11 +50,9 @@ export default function HowGetStarted() {
                 alt='shield'
                 sx={{ height: 55 }}
               /> */}
-              <Typography>
-                <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
-                  2.
-                </Box>
-              </Typography>
+              <Box margin={3} textAlign='center'>
+                <Typography style={{ fontWeight: 600 }}>2.</Typography>
+              </Box>
               <Typography variant='body1'>
                 {`Tell your friends and family about Encryptographs and ask them to create accounts of their own.`}
               </Typography>
@@ -70,11 +66,9 @@ export default function HowGetStarted() {
                 alt='photo'
                 sx={{ height: 55 }}
               /> */}
-              <Typography>
-                <Box margin={3} textAlign='center' fontWeight='fontWeightBold'>
-                  3.
-                </Box>
-              </Typography>
+              <Box margin={3} textAlign='center'>
+                <Typography style={{ fontWeight: 600 }}>3.</Typography>
+              </Box>
               <Typography variant='body1'>
                 {`Once they've shared their username with you, you can send invites to them to view your albums.`}
               </Typography>
