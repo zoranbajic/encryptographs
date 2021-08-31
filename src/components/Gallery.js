@@ -275,7 +275,7 @@ export default function Gallery(props) {
     <Container component='main'>
       <CssBaseline />
       <div className={classes.paper}>
-        <Grid container justifyContent='center'>
+        <Grid container justifyContent='center' spacing={2}>
           <Grid item container display='flex' justifyContent='center'>
             <Typography variant='h4'>{name}</Typography>
           </Grid>
@@ -309,7 +309,7 @@ export default function Gallery(props) {
               <label htmlFor='delete-image'>
                 <Button
                   variant='contained'
-                  color='primary'
+                  color='secondary'
                   component='span'
                   onClick={handleDeleteDialogClickOpen}
                 >
