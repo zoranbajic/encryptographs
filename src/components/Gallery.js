@@ -292,7 +292,7 @@ export default function Gallery(props) {
             )}
           </Grid>
           {album.accessLevel !== 0 ? (
-            <Grid container item justifyContent='center'>
+            <Grid container item justifyContent='space-around'>
               <label htmlFor='upload-images'>
                 <input
                   style={{ display: 'none' }}

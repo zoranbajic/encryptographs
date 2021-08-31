@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import * as Etebase from 'etebase';
+import { Footer } from '.';
 import {
   Avatar,
   Box,
@@ -13,19 +14,6 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../context';
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='https://material-ui.com/'>
-        Encryptographs
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -94,71 +82,77 @@ export default function ChangePassword() {
   };
 
   return (
-    <Container component='main' maxWidth='xs'>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component='h1' variant='h5'>
-          Change Password
-        </Typography>
-        {/* We need to add the onSubmit event listener here */}
-        <form className={classes.form} noValidate onSubmit={Submit}>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            id='currentPassword'
-            label='Current Password'
-            type='password'
-            name='currentPassword'
-            onChange={handleChange}
-            value={formInfo.currentPassword}
-            autoComplete='currentPassword'
-            autoFocus
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='newPassword'
-            onChange={handleChange}
-            label='New Password'
-            type='password'
-            value={formInfo.newPassword}
-            id='newPassword'
-            autoComplete='newPassword'
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='confirmNewPassword'
-            onChange={handleChange}
-            label='Confirm Password'
-            type='password'
-            value={formInfo.confirmNewPassword}
-            id='confirmNewPassword'
-            autoComplete='confirmNewPassword'
-          />
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-          >
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
             Change Password
-          </Button>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
+          </Typography>
+          {/* We need to add the onSubmit event listener here */}
+          <form className={classes.form} noValidate onSubmit={Submit}>
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              id='currentPassword'
+              label='Current Password'
+              type='password'
+              name='currentPassword'
+              onChange={handleChange}
+              value={formInfo.currentPassword}
+              autoComplete='currentPassword'
+              autoFocus
+            />
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='newPassword'
+              onChange={handleChange}
+              label='New Password'
+              type='password'
+              value={formInfo.newPassword}
+              id='newPassword'
+              autoComplete='newPassword'
+            />
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='confirmNewPassword'
+              onChange={handleChange}
+              label='Confirm Password'
+              type='password'
+              value={formInfo.confirmNewPassword}
+              id='confirmNewPassword'
+              autoComplete='confirmNewPassword'
+            />
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              color='primary'
+              className={classes.submit}
+            >
+              Change Password
+            </Button>
+          </form>
+        </div>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

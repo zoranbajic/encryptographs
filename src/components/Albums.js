@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AlbumCard, AlbumDialog } from '.';
+import { AlbumCard, AlbumDialog, Footer } from '.';
 import { UserContext, UserSessionContext } from '../context';
 import {
   Avatar,
@@ -139,7 +139,13 @@ export default function Albums() {
   };
 
   return (
-    <div>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
       {albums.data === undefined ||
       !albums.data.length ||
       albums.data.filter((data) => data.isDeleted === false).length === 0 ? (
@@ -169,11 +175,7 @@ export default function Albums() {
               album={album}
               message={'Create'}
             />
-            {/* </form> */}
           </div>
-          <Box mt={8}>
-            <Copyright />
-          </Box>
           <Snackbar
             open={showError}
             autoHideDuration={6000}
@@ -226,11 +228,9 @@ export default function Albums() {
               />
             </div>
           </Container>
-          <Box mt={8}>
-            <Copyright />
-          </Box>
         </div>
       )}
-    </div>
+      <Footer />
+    </Box>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ConfirmPassword, Footer, Navbar } from './components';
+import { ConfirmPassword, Navbar } from './components';
 import { UserContext, UserSessionContext } from './context';
 import Routes from './routes';
 import 'fontsource-roboto';
@@ -18,7 +18,6 @@ export default function App() {
     <div>
       <Navbar />
       <Routes />
-      {/* <Footer /> */}
     </div>
   );
 }

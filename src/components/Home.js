@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserContext, UserSessionContext } from '../context';
-import { Features, HowGetStarted, Technologies } from '.';
+import { Features, Footer, HowGetStarted, Technologies } from '.';
 import { Button, Container, Grid, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -85,6 +85,7 @@ const Home = () => {
       <Features />
       <HowGetStarted />
       <Technologies />
+      <Footer />
     </main>
   );
 };
