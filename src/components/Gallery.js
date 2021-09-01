@@ -5,7 +5,10 @@ import { Base64 } from 'js-base64';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss';
 import {
+  Backdrop,
+  Box,
   Button,
+  CircularProgress,
   Container,
   CssBaseline,
   Grid,
@@ -13,6 +16,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext, UserSessionContext } from '../context';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,6 +46,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
+
 export default function Gallery(props) {
   const classes = useStyles();
   const location = useLocation();
@@ -62,6 +70,8 @@ export default function Gallery(props) {
   const collectionManager = user.getCollectionManager();
   const photoManager = collectionManager.getItemManager(album);
 
+  const [showProgress, setShowProgress] = useState(false);
+
   // If the user is not logged in, send them to the login page
   if (!userSession) {
     history.push('/login');
@@ -78,62 +88,72 @@ export default function Gallery(props) {
 
   // Get any photos already saved in the album on Etebase
   async function getPhotos() {
-    let initialPhotoArray = [];
-    let uidArray = [];
-    let photos = [];
-    let photoList = await photoManager.list();
+    try {
+      setShowProgress(true);
+      let initialPhotoArray = [];
+      let uidArray = [];
+      let photos = [];
+      let photoList = await photoManager.list();
 
-    // We need to remove any photos that have been marked as deleted
-    for (const photo of photoList.data) {
-      photo.isDeleted ? null : photos.push(photo);
-    }
-
-    for (const photo of photos) {
-      let photoContent = await photo.getContent();
-      let base64Photo = await cleanUp(Base64.fromUint8Array(photoContent));
-      initialPhotoArray.push(base64Photo);
-      uidArray.push(photo.uid);
-    }
-
-    updateState(initialPhotoArray, uidArray);
-
-    async function cleanUp(fullString) {
-      function findAndInsertAfter(fullString, searchString, value) {
-        const insertPosition =
-          fullString.indexOf(searchString) + searchString.length;
-        const newString =
-          fullString.slice(0, insertPosition) +
-          value +
-          fullString.slice(insertPosition);
-        return newString;
+      // We need to remove any photos that have been marked as deleted
+      for (const photo of photoList.data) {
+        photo.isDeleted ? null : photos.push(photo);
       }
 
-      function findAndInsertBefore(fullString, searchString, value) {
-        const insertPosition = fullString.indexOf(searchString);
-        const newString =
-          fullString.slice(0, insertPosition) +
-          value +
-          fullString.slice(insertPosition);
-        return newString;
+      for (const photo of photos) {
+        let photoContent = await photo.getContent();
+        let base64Photo = await cleanUp(Base64.fromUint8Array(photoContent));
+        initialPhotoArray.push(base64Photo);
+        uidArray.push(photo.uid);
       }
 
-      const firstPass = findAndInsertAfter(fullString, 'data', ':');
-      const secondPass = findAndInsertBefore(firstPass, 'base64', ';');
-      const thirdPass = findAndInsertAfter(secondPass, 'base64', ',');
+      updateState(initialPhotoArray, uidArray);
 
-      return thirdPass;
+      async function cleanUp(fullString) {
+        function findAndInsertAfter(fullString, searchString, value) {
+          const insertPosition =
+            fullString.indexOf(searchString) + searchString.length;
+          const newString =
+            fullString.slice(0, insertPosition) +
+            value +
+            fullString.slice(insertPosition);
+          return newString;
+        }
+
+        function findAndInsertBefore(fullString, searchString, value) {
+          const insertPosition = fullString.indexOf(searchString);
+          const newString =
+            fullString.slice(0, insertPosition) +
+            value +
+            fullString.slice(insertPosition);
+          return newString;
+        }
+
+        const firstPass = findAndInsertAfter(fullString, 'data', ':');
+        const secondPass = findAndInsertBefore(firstPass, 'base64', ';');
+        const thirdPass = findAndInsertAfter(secondPass, 'base64', ',');
+
+        return thirdPass;
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setShowProgress(false);
     }
   }
 
-  // This gets the image in the format we need, encrypts it, uploads it, and
+  // This gets the image(s) in the format we need, encrypts it, uploads it, and
   // updates state
   async function processFile(evt) {
     try {
+      setShowProgress(true);
       const base64Array = await encodeImagesToBase64(evt);
       const itemArray = await uploadImages(base64Array);
       updateState(base64Array, uidArray);
     } catch (err) {
       console.log(err);
+    } finally {
+      setShowProgress(false);
     }
   }
 
@@ -255,6 +275,7 @@ export default function Gallery(props) {
     setOpenDeleteDialog(false);
     if (value === 'Agree') {
       try {
+        setShowProgress(true);
         const photo = await photoManager.fetch(photoUid);
         photo.delete();
         await photoManager.batch([photo]);
@@ -267,65 +288,75 @@ export default function Gallery(props) {
         setImages((previous) =>
           previous.filter((uid, index) => index !== indexOfPhoto)
         );
+        setShowProgress(false);
       }
     }
   }
 
   return (
-    <Container component='main'>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Grid container justifyContent='center' spacing={2}>
-          <Grid item container display='flex' justifyContent='center'>
-            <Typography variant='h4'>{name}</Typography>
-          </Grid>
-          <Grid container item justifyContent='center'>
-            {images.length === 0 ? (
-              <ImageGallery
-                items={images}
-                showFullscreenButton={false}
-                showPlayButton={false}
-                ref={galleryRef}
-              />
-            ) : (
-              <ImageGallery items={images} ref={galleryRef} />
-            )}
-          </Grid>
-          {album.accessLevel !== 0 ? (
-            <Grid container item justifyContent='space-around'>
-              <label htmlFor='upload-images'>
-                <input
-                  style={{ display: 'none' }}
-                  id='upload-images'
-                  name='upload-images'
-                  type='file'
-                  onChange={processFile}
-                  multiple
-                />
-                <Button variant='contained' color='primary' component='span'>
-                  Add Images
-                </Button>
-              </label>
-              <label htmlFor='delete-image'>
-                <Button
-                  variant='contained'
-                  color='secondary'
-                  component='span'
-                  onClick={handleDeleteDialogClickOpen}
-                >
-                  Delete Image
-                </Button>
-                <DeleteDialog
-                  open={openDeleteDialog}
-                  onClose={handleDeleteDialogClose}
-                  selectedValue={selectedDeleteValue}
-                  message={'image'}
-                />
-              </label>
+    <div>
+      <Container component='main'>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Grid container justifyContent='center'>
+            <Grid item container display='flex' justifyContent='center'>
+              <Typography variant='h4'>{name}</Typography>
             </Grid>
-          ) : null}
-        </Grid>
-      </div>
-    </Container>
+            <Grid container item justifyContent='center'>
+              <Box width='80%'>
+                {images.length === 0 ? (
+                  <ImageGallery
+                    items={images}
+                    showFullscreenButton={false}
+                    showPlayButton={false}
+                    ref={galleryRef}
+                  />
+                ) : (
+                  <ImageGallery items={images} ref={galleryRef} />
+                )}
+              </Box>
+            </Grid>
+            {album.accessLevel !== 0 ? (
+              <Grid container item justifyContent='space-around'>
+                <label htmlFor='upload-images'>
+                  <input
+                    style={{ display: 'none' }}
+                    id='upload-images'
+                    name='upload-images'
+                    type='file'
+                    onChange={processFile}
+                    multiple
+                  />
+                  <Button variant='contained' color='primary' component='span'>
+                    Add Images
+                  </Button>
+                </label>
+                {images.length !== 0 ? (
+                  <label htmlFor='delete-image'>
+                    <Button
+                      variant='contained'
+                      color='secondary'
+                      component='span'
+                      onClick={handleDeleteDialogClickOpen}
+                    >
+                      Delete Image
+                    </Button>
+                    <DeleteDialog
+                      open={openDeleteDialog}
+                      onClose={handleDeleteDialogClose}
+                      selectedValue={selectedDeleteValue}
+                      message={'image'}
+                    />
+                  </label>
+                ) : null}
+              </Grid>
+            ) : null}
+          </Grid>
+        </div>
+      </Container>
+      <Backdrop className={classes.backdrop} open={showProgress}>
+        <CircularProgress color='primary' />
+      </Backdrop>
+    </div>
   );
 }

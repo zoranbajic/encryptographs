@@ -12,6 +12,7 @@ import {
 import HomeIcon from '@material-ui/icons/Home';
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
 import MenuIcon from '@material-ui/icons/Menu';
+import InfoIcon from '@material-ui/icons/Info';
 import { UserSessionContext } from '../context';
 
 const useStyles = makeStyles({
@@ -72,6 +73,17 @@ export default function DrawerMenu() {
                   <ListItemText primary={'View Albums'} />
                 </ListItem>
               )}
+              <ListItem
+                button
+                component={RouterLink}
+                to={'/about'}
+                key={'About'}
+              >
+                <ListItemIcon>
+                  <InfoIcon />
+                </ListItemIcon>
+                <ListItemText primary={'About'} />
+              </ListItem>
             </List>
           </div>
         </Drawer>

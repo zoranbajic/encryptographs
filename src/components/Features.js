@@ -38,7 +38,7 @@ export default function Features() {
                   END-TO-END ENCRYPTED
                 </Typography>
               </Box>
-              <Typography variant='body1'>
+              <Typography variant='body1' align='center'>
                 {`Because your data is encrypted before it leaves your computer, even we can't see it.`}
               </Typography>
             </Box>
@@ -56,7 +56,7 @@ export default function Features() {
                   WE TAKE PRIVACY SERIOUSLY
                 </Typography>
               </Box>
-              <Typography variant='body1'>
+              <Typography variant='body1' align='center'>
                 {`We don't collect personal data, track you, or use cookies.`}
               </Typography>
             </Box>
@@ -74,7 +74,7 @@ export default function Features() {
                   LOSSLESS STORAGE
                 </Typography>
               </Box>
-              <Typography variant='body1'>
+              <Typography variant='body1' align='center'>
                 {`Your photos are not compressed in any way. What you upload is what you will see.`}
               </Typography>
             </Box>

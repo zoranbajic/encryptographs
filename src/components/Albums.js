@@ -4,12 +4,13 @@ import { AlbumCard, AlbumDialog, Footer } from '.';
 import { UserContext, UserSessionContext } from '../context';
 import {
   Avatar,
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   Container,
   CssBaseline,
   Grid,
-  Link,
   Snackbar,
   Typography,
 } from '@material-ui/core';
@@ -19,19 +20,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='https://www.encryptographs.com'>
-        Encryptographs
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +63,7 @@ export default function Albums() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
+  const [showProgress, setShowProgress] = useState(false);
   const [showError, setShowError] = useState(false);
 
   // If the user is not logged in, send them to the login page
@@ -93,11 +82,14 @@ export default function Albums() {
   async function getAlbums() {
     const collectionManager = user.getCollectionManager();
     try {
+      setShowProgress(true);
       albumCollections = await collectionManager.list('encryptograph.album');
       setAlbums(albumCollections);
     } catch (err) {
       console.log(err);
       setShowError(true);
+    } finally {
+      setShowProgress(false);
     }
   }
 
@@ -230,6 +222,9 @@ export default function Albums() {
           </Container>
         </div>
       )}
+      <Backdrop className={classes.backdrop} open={showProgress}>
+        <CircularProgress color='primary' />
+      </Backdrop>
       <Footer />
     </Box>
   );

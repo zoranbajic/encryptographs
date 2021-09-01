@@ -167,7 +167,9 @@ export default function InteractiveList() {
               </Grid>
             ))
           ) : (
-            <Typography variant='h5'>You do not have any invites</Typography>
+            <Box marginTop={30}>
+              <Typography variant='h5'>You do not have any invites</Typography>
+            </Box>
           )}
         </Grid>
       </div>
