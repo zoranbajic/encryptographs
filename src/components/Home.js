@@ -74,7 +74,7 @@ const Home = () => {
                       pathname: '/signup',
                     }}
                   >
-                    Signup
+                    Sign Up
                   </Button>
                 </Grid>
               )}
