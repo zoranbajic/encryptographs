@@ -14,3 +14,8 @@ export { default as PublicKey } from './PublicKey';
 export { default as ShareInviteDialog } from './ShareInviteDialog';
 export { default as Invites } from './Invites';
 export { default as PublicKeyDialog } from './PublicKeyDialog';
+export { default as Features } from './Features';
+export { default as HowGetStarted } from './HowGetStarted';
+export { default as Technologies } from './Technologies';
+export { default as Footer } from './Footer';
+export { default as About } from './About';

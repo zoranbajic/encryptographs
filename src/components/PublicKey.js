@@ -2,9 +2,22 @@ import React, { useContext } from 'react';
 import * as Etebase from 'etebase';
 import { makeStyles } from '@material-ui/core/styles';
 import { UserContext } from '../context';
-import { Grid, Typography } from '@material-ui/core';
+import { Footer } from '.';
+import {
+  Box,
+  CssBaseline,
+  Container,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   root: {
     flexGrow: 1,
   },
@@ -34,21 +47,35 @@ export default function PublicKey() {
   const lineThree = prettyFingerprint.substr(48);
 
   return (
-    <Grid container direction='column' align='center'>
-      <Typography component='h1' variant='h4' className={classes.title}>
-        Your Public Key
-      </Typography>
-      <Grid
-        container
-        direction='column'
-        justifyContent='center'
-        alignItems='center'
-        className={classes.centerColumn}
-      >
-        <Typography variant='h5'>{lineOne}</Typography>
-        <Typography variant='h5'>{lineTwo}</Typography>
-        <Typography variant='h5'>{lineThree}</Typography>
-      </Grid>
-    </Grid>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Grid container direction='column' align='center'>
+            <Typography component='h1' variant='h4' className={classes.title}>
+              Your Public Key
+            </Typography>
+            <Grid
+              container
+              direction='column'
+              justifyContent='center'
+              alignItems='center'
+              className={classes.centerColumn}
+            >
+              <Typography variant='h5'>{lineOne}</Typography>
+              <Typography variant='h5'>{lineTwo}</Typography>
+              <Typography variant='h5'>{lineThree}</Typography>
+            </Grid>
+          </Grid>
+        </div>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

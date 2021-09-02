@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
+import { Footer } from '.';
 import cryptico from 'cryptico';
 import { UserContext, UserSessionContext } from '../context';
 import {
@@ -22,19 +23,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='https://www.encryptographs.com'>
-        Encryptographs
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -115,51 +103,61 @@ export default function ConfirmPassword() {
   };
 
   return (
-    <Container component='main' maxWidth='xs'>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component='h1' variant='h5'>
-          Confirm your password
-        </Typography>
-        <form className={classes.form} onSubmit={Submit}>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            onChange={handleChange}
-            value={formInfo.password}
-            label='Password'
-            type='password'
-            id='password'
-            autoComplete='current-password'
-          />
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-          >
-            Confirm Password
-          </Button>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-      <Backdrop className={classes.backdrop} open={showProgress}>
-        <CircularProgress color='primary' />
-      </Backdrop>
-      <Snackbar open={showError} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='error'>
-          Your username or password is incorrect.
-        </Alert>
-      </Snackbar>
-    </Container>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
+            Confirm your password
+          </Typography>
+          <form className={classes.form} onSubmit={Submit}>
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='password'
+              onChange={handleChange}
+              value={formInfo.password}
+              label='Password'
+              type='password'
+              id='password'
+              autoComplete='current-password'
+            />
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              color='primary'
+              className={classes.submit}
+            >
+              Confirm Password
+            </Button>
+          </form>
+        </div>
+        <Backdrop className={classes.backdrop} open={showProgress}>
+          <CircularProgress color='primary' />
+        </Backdrop>
+        <Snackbar
+          open={showError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity='error'>
+            Your username or password is incorrect.
+          </Alert>
+        </Snackbar>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

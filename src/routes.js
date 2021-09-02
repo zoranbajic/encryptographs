@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import {
+  About,
   Albums,
   ChangePassword,
   Gallery,
@@ -24,6 +25,7 @@ class Routes extends Component {
         <Route path='/signup' component={Signup} />
         <Route path='/publickey' component={PublicKey} />
         <Route path='/invites' component={Invites} />
+        <Route path='/about' component={About} />
       </Switch>
     );
   }

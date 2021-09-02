@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
+import { Footer } from '.';
 import cryptico from 'cryptico';
 import { UserContext, UserSessionContext } from '../context';
 import {
@@ -17,19 +18,6 @@ import {
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='https://material-ui.com/'>
-        Encryptographs
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -128,90 +116,110 @@ export default function Signup() {
     }
   }
 
+  function Copyright() {
+    return (
+      <Typography variant='body2' color='textSecondary' align='center'>
+        {'Copyright © '}
+        <Link color='inherit' href='https://www.encryptographs.com'>
+          Encryptographs
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    );
+  }
+
   const handleChange = (evt) => {
     evt.persist();
     setData({ ...data, [evt.target.name]: evt.target.value });
   };
   return (
-    <Container component='main' maxWidth='xs'>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component='h1' variant='h5'>
-          Sign Up
-        </Typography>
-        {/* We need to add the onSubmit event listener here */}
-        <form className={classes.form} noValidate onSubmit={Submit}>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='email'
-            onChange={handleChange}
-            label='Email'
-            type='email'
-            value={data.email}
-            id='email'
-            autoFocus
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            onChange={handleChange}
-            value={data.username}
-            autoComplete='username'
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            onChange={handleChange}
-            label='Password'
-            type='password'
-            value={data.password}
-            id='password'
-            autoComplete='current-password'
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='confirmPassword'
-            onChange={handleChange}
-            label='Confirm Password'
-            type='password'
-            value={data.confirmPassword}
-            id='confirmPassword'
-            autoComplete='current-password'
-          />
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-          >
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        alignItems: 'center',
+      }}
+    >
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
             Sign Up
-          </Button>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-      <Backdrop className={classes.backdrop} open={showProgress}>
-        <CircularProgress color='primary' />
-      </Backdrop>
-    </Container>
+          </Typography>
+          {/* We need to add the onSubmit event listener here */}
+          <form className={classes.form} noValidate onSubmit={Submit}>
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='email'
+              onChange={handleChange}
+              label='Email'
+              type='email'
+              value={data.email}
+              id='email'
+              autoFocus
+            />
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              id='username'
+              label='Username'
+              name='username'
+              onChange={handleChange}
+              value={data.username}
+              autoComplete='username'
+            />
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='password'
+              onChange={handleChange}
+              label='Password'
+              type='password'
+              value={data.password}
+              id='password'
+              autoComplete='current-password'
+            />
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='confirmPassword'
+              onChange={handleChange}
+              label='Confirm Password'
+              type='password'
+              value={data.confirmPassword}
+              id='confirmPassword'
+              autoComplete='current-password'
+            />
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              color='primary'
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+          </form>
+        </div>
+        <Backdrop className={classes.backdrop} open={showProgress}>
+          <CircularProgress color='primary' />
+        </Backdrop>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

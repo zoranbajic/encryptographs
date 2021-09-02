@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useHistory, Link as RouterLink } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import cryptico from 'cryptico';
+import { Footer } from '.';
 import { UserContext, UserSessionContext } from '../context';
 import {
   Avatar,
@@ -23,19 +24,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
-
-function Copyright() {
-  return (
-    <Typography variant='body2' color='textSecondary' align='center'>
-      {'Copyright © '}
-      <Link color='inherit' href='https://www.encryptographs.com'>
-        Encryptographs
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -132,71 +120,81 @@ export default function Login() {
   };
 
   return (
-    <Container component='main' maxWidth='xs'>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component='h1' variant='h5'>
-          Sign in
-        </Typography>
-        <form className={classes.form} onSubmit={Submit}>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            onChange={handleChange}
-            value={formInfo.username}
-            autoComplete='username'
-            autoFocus
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            onChange={handleChange}
-            value={formInfo.password}
-            label='Password'
-            type='password'
-            id='password'
-            autoComplete='current-password'
-          />
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Grid container justifyContent='center'>
-            <Grid item>
-              <Link component={RouterLink} to='/signup'>
-                {"Don't have an account? Sign Up"}
-              </Link>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}
+    >
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component='h1' variant='h5'>
+            Sign in
+          </Typography>
+          <form className={classes.form} onSubmit={Submit}>
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              id='username'
+              label='Username'
+              name='username'
+              onChange={handleChange}
+              value={formInfo.username}
+              autoComplete='username'
+              autoFocus
+            />
+            <TextField
+              variant='outlined'
+              margin='normal'
+              required
+              fullWidth
+              name='password'
+              onChange={handleChange}
+              value={formInfo.password}
+              label='Password'
+              type='password'
+              id='password'
+              autoComplete='current-password'
+            />
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              color='primary'
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <Grid container justifyContent='center'>
+              <Grid item>
+                <Link component={RouterLink} to='/signup'>
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-      <Backdrop className={classes.backdrop} open={showProgress}>
-        <CircularProgress color='primary' />
-      </Backdrop>
-      <Snackbar open={showError} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity='error'>
-          Your username or password is incorrect.
-        </Alert>
-      </Snackbar>
-    </Container>
+          </form>
+        </div>
+        <Backdrop className={classes.backdrop} open={showProgress}>
+          <CircularProgress color='primary' />
+        </Backdrop>
+        <Snackbar
+          open={showError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity='error'>
+            Your username or password is incorrect.
+          </Alert>
+        </Snackbar>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

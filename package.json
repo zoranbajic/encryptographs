@@ -1,7 +1,7 @@
 {
-  "name": "securephotoalbum",
+  "name": "encryptographs",
   "version": "1.0.0",
-  "description": "Secure Photo Album is an end-to-end encrypted service that allows users to securely share photos with friends and family. It utilizes Etebase, an SDK developed by EteSync which ensures that users are in complete control of their data.",
+  "description": "Encryptographs is an end-to-end encrypted service that allows users to securely share photos with friends and family. It utilizes Etebase, an SDK developed by EteSync which ensures that users are in complete control of their data.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,18 +23,14 @@
     "dotenv-webpack": "^7.0.2",
     "env-cmd": "^10.1.0",
     "etebase": "^0.43.0",
+    "fontsource-roboto": "^4.0.0",
     "js-base64": "^3.6.1",
     "node-fetch": "^2.6.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-image-gallery": "^1.2.5",
-    "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3",
-    "redux": "^4.0.5",
-    "redux-devtools-extension": "^2.13.9",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "react-scripts": "^4.0.3"
   },
   "browserslist": {
     "production": [
