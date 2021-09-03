@@ -116,19 +116,6 @@ export default function Signup() {
     }
   }
 
-  function Copyright() {
-    return (
-      <Typography variant='body2' color='textSecondary' align='center'>
-        {'Copyright © '}
-        <Link color='inherit' href='https://www.encryptographs.com'>
-          Encryptographs
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
-
   const handleChange = (evt) => {
     evt.persist();
     setData({ ...data, [evt.target.name]: evt.target.value });

@@ -186,10 +186,10 @@ export default function Navbar() {
           {!userSession ? (
             <div>
               <Button color='inherit' component={RouterLink} to={'/signup'}>
-                Signup
+                Sign Up
               </Button>
               <Button color='inherit' component={RouterLink} to={'/login'}>
-                Login
+                Log In
               </Button>
             </div>
           ) : (

@@ -31,7 +31,7 @@ export default function Technologies() {
             marginBottom={5}
             fontWeight='fontWeightBold'
           >
-            BUILT WITH
+            TECHNOLOGIES USED
           </Box>
         </Typography>
         <Grid container>

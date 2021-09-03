@@ -57,7 +57,7 @@ export default function Features() {
                 </Typography>
               </Box>
               <Typography variant='body1' align='center'>
-                {`We don't collect personal data, track you, or use cookies.`}
+                {`We don't collect personal data or use cookies to track you.`}
               </Typography>
             </Box>
           </Grid>
@@ -75,7 +75,7 @@ export default function Features() {
                 </Typography>
               </Box>
               <Typography variant='body1' align='center'>
-                {`Your photos are not compressed in any way. What you upload is what you will see.`}
+                {`Your photos are not compressed in any way. What you upload is exactly what you'll see.`}
               </Typography>
             </Box>
           </Grid>

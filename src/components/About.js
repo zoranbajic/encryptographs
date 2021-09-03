@@ -25,20 +25,21 @@ export default function About() {
               relatives began clamoring for pictures of the newest family
               member. Being a bit of a privacy enthusiast/hobbyist I knew I
               wouldn't be trusting any site that didn't use end-to-end
-              encryption with these photos. Apps like Signal were an option but
-              that required getting every one to download an install it, which
-              would be a hassle and a challenge especially for those who weren't
-              very tech-savy. Additionally, there was no way to create albums so
-              grouping photos for ease of browsing was not an option.
+              encryption with those kinds of photos. Apps like Signal were an
+              option but that required getting everyone to download an install
+              it, which would be a hassle and a challenge especially for those
+              who weren't very tech-savy. Additionally, there was no way to
+              create albums so grouping photos for ease of browsing was not an
+              option.
             </Typography>
             <Typography paragraph={true}>
               I researched the options available but while there were
               sites/services that allowed you to create end-to-end encrypted
               image galleries, none of them offered the ability to share those
-              with anyone else {'('}which I guessed was due to the technical
-              challenges
+              with anyone else {'('} I guess due to the technical challenges
               {')'}. In the end, I just threw in the towel and used secure
-              messaging apps to share photos.
+              messaging apps, hoping something better would eventually come
+              along.
             </Typography>
             <Typography paragraph={true}>
               Time went by, I ended up switching careers to software
@@ -54,10 +55,10 @@ export default function About() {
               and thus Encryptographs was born.
             </Typography>
             <Typography paragraph={true}>
-              As it is now, it is very much a beta version but the core
-              functionality is there. I will continue to work on refining it,
-              fixing bugs and adding features but for now, play around it and
-              let me know what you think!
+              As it is now, I still consider it a beta version but the core
+              functionality is all there. I will continue to work on refining
+              it, fixing bugs and adding features but for now, play around it
+              and let me know what you think!
             </Typography>
           </Grid>
         </Grid>
