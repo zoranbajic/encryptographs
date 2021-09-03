@@ -5,30 +5,45 @@ import { UserContext } from '../context';
 import * as Etebase from 'etebase';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  Backdrop,
   Card,
   CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
+  CircularProgress,
   Grid,
   IconButton,
+  Snackbar,
   Typography,
 } from '@material-ui/core/';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import EditOutlined from '@material-ui/icons/EditOutlined';
 import ShareIcon from '@material-ui/icons/Share';
+import MuiAlert from '@material-ui/lab/Alert';
 
-const useStyles = makeStyles({
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
+
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
   },
-});
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}));
 
 export default function AlbumCard(props) {
   const classes = useStyles();
   const [openAlbumDialog, setOpenAlbumDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openShareDialog, setOpenShareDialog] = useState(false);
+  const [inviteError, setInviteError] = useState(false);
+  const [inviteSuccess, setInviteSuccess] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
   const { album, name, description, uid, getAlbums } = props;
   const [user, setUser] = useContext(UserContext);
   let albumMeta = {
@@ -65,10 +80,25 @@ export default function AlbumCard(props) {
     setOpenShareDialog(true);
   };
 
+  const handleSuccessClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setInviteSuccess(false);
+  };
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setInviteError(false);
+  };
+
   async function handleShareDialogClose(value, accessLevel) {
     setOpenShareDialog(false);
     if (value === 'Send') {
       try {
+        setShowProgress(true);
         const invitationManager = user.getInvitationManager();
         const invitee = await invitationManager.fetchUserProfile(
           accessLevel.user
@@ -79,10 +109,11 @@ export default function AlbumCard(props) {
           invitee.pubkey,
           Etebase.CollectionAccessLevel[accessLevel.userAccess]
         );
+        setShowProgress(false);
+        setInviteSuccess(true);
       } catch (err) {
-        console.log(err);
-      } finally {
-        console.log('AlbumCard: Your invitation was successfully sent');
+        setShowProgress(false);
+        setInviteError(true);
       }
     }
   }
@@ -192,6 +223,27 @@ export default function AlbumCard(props) {
             />
           </CardActions>
         ) : null}
+        <Backdrop className={classes.backdrop} open={showProgress}>
+          <CircularProgress color='primary' />
+        </Backdrop>
+        <Snackbar
+          open={inviteSuccess}
+          autoHideDuration={6000}
+          onClose={handleSuccessClose}
+        >
+          <Alert onClose={handleSuccessClose} severity='success'>
+            Your invite was successfully sent!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={inviteError}
+          autoHideDuration={6000}
+          onClose={handleErrorClose}
+        >
+          <Alert onClose={handleErrorClose} severity='error'>
+            The user entered does not exist.
+          </Alert>
+        </Snackbar>
       </Card>
     </Grid>
   );
