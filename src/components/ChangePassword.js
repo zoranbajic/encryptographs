@@ -89,7 +89,6 @@ export default function ChangePassword() {
       // Show error message if current password provided is not correct
       setShowProgress(false);
       setShowCurrentPasswordError(true);
-    } finally {
     }
   }
 

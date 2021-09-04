@@ -279,15 +279,15 @@ export default function Gallery(props) {
         const photo = await photoManager.fetch(photoUid);
         photo.delete();
         await photoManager.batch([photo]);
-      } catch (err) {
-        console.log(err);
-      } finally {
         setImageUids((previous) =>
           previous.filter((uid, index) => index !== indexOfPhoto)
         );
         setImages((previous) =>
           previous.filter((uid, index) => index !== indexOfPhoto)
         );
+      } catch (err) {
+        console.log(err);
+      } finally {
         setShowProgress(false);
       }
     }
