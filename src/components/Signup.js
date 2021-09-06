@@ -12,12 +12,17 @@ import {
   CircularProgress,
   Container,
   CssBaseline,
-  Link,
+  Snackbar,
   TextField,
   Typography,
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,6 +60,7 @@ export default function Signup() {
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
   const [showProgress, setShowProgress] = useState(false);
+  const [showPasswordError, setShowPasswordError] = useState(false);
   const history = useHistory();
 
   async function Submit(evt) {
@@ -70,49 +76,51 @@ export default function Signup() {
         password: data.password,
         confirmPassword: data.confirmPassword,
       };
-      if (formData.confirmPassword !== formData.password) {
-        alert('Your passwords do not match');
+      if (formData.confirmPassword === formData.password) {
+        // Creates the account
+        const eteBaseUser = await Etebase.Account.signup(
+          {
+            username: formData.username,
+            email: formData.email,
+          },
+          formData.password,
+          serverUrl
+        );
+
+        // Logs in the user
+        const etebase = await Etebase.Account.login(
+          formData.username,
+          formData.password,
+          serverUrl
+        );
+
+        // Create encryption key to encrypt the session
+        const RSAkey = cryptico.generateRSAKey(formData.password, 186);
+        const encryptionKey = cryptico.publicKeyString(RSAkey);
+
+        // Save the session and assign it and the user to the respective state
+        // values
+        savedSession = await etebase.save(encryptionKey);
+        setUser(etebase);
+        setUserSession(savedSession);
+        // Clear the inputs after the button is pressed
+        // Hide the progress dialog
+        setShowProgress(false);
+        // Clear the form and go back to the login page
+        setData({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        });
+        history.push('/albums');
+      } else {
+        setShowProgress(false);
+        setShowPasswordError(true);
       }
-      // Creates the account
-      const eteBaseUser = await Etebase.Account.signup(
-        {
-          username: formData.username,
-          email: formData.email,
-        },
-        formData.password,
-        serverUrl
-      );
-
-      // Logs in the user
-      const etebase = await Etebase.Account.login(
-        formData.username,
-        formData.password,
-        serverUrl
-      );
-
-      // Create encryption key to encrypt the session
-      const RSAkey = cryptico.generateRSAKey(formData.password, 186);
-      const encryptionKey = cryptico.publicKeyString(RSAkey);
-
-      // Save the session and assign it and the user to the respective state
-      // values
-      savedSession = await etebase.save(encryptionKey);
-      setUser(etebase);
-      setUserSession(savedSession);
     } catch (err) {
       console.log(err);
-    } finally {
-      // Clear the inputs after the button is pressed
-      // Hide the progress dialog
       setShowProgress(false);
-      // Clear the form and go back to the login page
-      setData({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      });
-      history.push('/albums');
     }
   }
 
@@ -120,6 +128,14 @@ export default function Signup() {
     evt.persist();
     setData({ ...data, [evt.target.name]: evt.target.value });
   };
+
+  const handlePasswordErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setShowPasswordError(false);
+  };
+
   return (
     <Box
       sx={{
@@ -205,6 +221,15 @@ export default function Signup() {
         <Backdrop className={classes.backdrop} open={showProgress}>
           <CircularProgress color='primary' />
         </Backdrop>
+        <Snackbar
+          open={showPasswordError}
+          autoHideDuration={6000}
+          onClose={handlePasswordErrorClose}
+        >
+          <Alert onClose={handlePasswordErrorClose} severity='error'>
+            Your passwords do not match.
+          </Alert>
+        </Snackbar>
       </Container>
       <Footer />
     </Box>

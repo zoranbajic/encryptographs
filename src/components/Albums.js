@@ -102,6 +102,7 @@ export default function Albums() {
     // This closes the dialog window
     setOpen(false);
     if (value === 'Create') {
+      setShowProgress(true);
       const collectionManager = user.getCollectionManager();
       try {
         // Creates a collection
@@ -115,10 +116,11 @@ export default function Albums() {
         );
         // Uploads the collection
         await collectionManager.upload(collection);
+        getAlbums();
       } catch (err) {
         console.log(err);
       } finally {
-        getAlbums();
+        setShowProgress(false);
       }
     }
   }

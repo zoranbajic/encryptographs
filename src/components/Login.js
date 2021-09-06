@@ -92,19 +92,18 @@ export default function Login() {
       savedSession = await etebase.save(encryptionKey);
       setUser(etebase);
       setUserSession(savedSession);
+      // If log in was successful clear the form and go back to the home page
+
+      setFormInfo({
+        username: '',
+        password: '',
+      });
+      history.push('/albums');
     } catch (error) {
       setShowError(true);
     } finally {
       // Hide the progress dialog
       setShowProgress(false);
-      // If log in was successful clear the form and go back to the home page
-      if (savedSession) {
-        setFormInfo({
-          username: '',
-          password: '',
-        });
-        history.push('/albums');
-      }
     }
   }
 

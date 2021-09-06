@@ -61,10 +61,9 @@ export default function AlbumCard(props) {
     let albumCollection = {};
     try {
       albumCollection = await collectionManager.fetch(uid);
+      return albumCollection;
     } catch (err) {
       console.log(err);
-    } finally {
-      return albumCollection;
     }
   }
 
@@ -109,21 +108,22 @@ export default function AlbumCard(props) {
           invitee.pubkey,
           Etebase.CollectionAccessLevel[accessLevel.userAccess]
         );
-        setShowProgress(false);
         setInviteSuccess(true);
       } catch (err) {
-        setShowProgress(false);
         setInviteError(true);
+      } finally {
+        setShowProgress(false);
       }
     }
   }
 
   // This takes in either "Cancel" or "Save" as a value
-  async function handleClose(value, album) {
+  async function handleEditClose(value, album) {
     // This closes the dialog window
     setOpenAlbumDialog(false);
     if (value === 'Save') {
       try {
+        setShowProgress(true);
         const albumCollection = await getAlbum(album.uid);
         const meta = albumCollection.getMeta();
         albumCollection.setMeta({
@@ -132,10 +132,11 @@ export default function AlbumCard(props) {
           description: album.description,
         });
         await collectionManager.upload(albumCollection);
+        getAlbums();
       } catch (err) {
         console.log(err);
       } finally {
-        getAlbums();
+        setShowProgress(false);
       }
     }
   }
@@ -146,13 +147,15 @@ export default function AlbumCard(props) {
     // If the value is Agree, we delete the album and re-render Albums component
     if (value === 'Agree') {
       try {
+        setShowProgress(true);
         const albumCollection = await getAlbum(album.uid);
         albumCollection.delete();
         await collectionManager.upload(albumCollection);
+        getAlbums();
       } catch (err) {
         console.log(err);
       } finally {
-        getAlbums();
+        setShowProgress(false);
       }
     }
   }
@@ -200,7 +203,7 @@ export default function AlbumCard(props) {
 
             <AlbumDialog
               open={openAlbumDialog}
-              onClose={handleClose}
+              onClose={handleEditClose}
               selectedValue={selectedValue}
               album={albumMeta}
               message={'Edit'}
