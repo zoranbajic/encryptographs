@@ -1,9 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import { Footer } from '.';
-import cryptico from 'cryptico';
-import { UserContext, UserSessionContext } from '../context';
 import {
   Avatar,
   Backdrop,
@@ -57,10 +55,10 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
   });
-  const [user, setUser] = useContext(UserContext);
-  const [userSession, setUserSession] = useContext(UserSessionContext);
   const [showProgress, setShowProgress] = useState(false);
   const [showPasswordError, setShowPasswordError] = useState(false);
+  const [showUserError, setShowUserError] = useState(false);
+  const [showEmailError, setShowEmailError] = useState(false);
   const history = useHistory();
 
   async function Submit(evt) {
@@ -87,25 +85,6 @@ export default function Signup() {
           serverUrl
         );
 
-        // Logs in the user
-        const etebase = await Etebase.Account.login(
-          formData.username,
-          formData.password,
-          serverUrl
-        );
-
-        // Create encryption key to encrypt the session
-        const RSAkey = cryptico.generateRSAKey(formData.password, 186);
-        const encryptionKey = cryptico.publicKeyString(RSAkey);
-
-        // Save the session and assign it and the user to the respective state
-        // values
-        savedSession = await etebase.save(encryptionKey);
-        setUser(etebase);
-        setUserSession(savedSession);
-        // Clear the inputs after the button is pressed
-        // Hide the progress dialog
-        setShowProgress(false);
         // Clear the form and go back to the login page
         setData({
           username: '',
@@ -113,13 +92,15 @@ export default function Signup() {
           password: '',
           confirmPassword: '',
         });
-        history.push('/albums');
+        history.push('/login');
       } else {
         setShowProgress(false);
         setShowPasswordError(true);
       }
     } catch (err) {
-      console.log(err);
+      err.message === 'User already exists'
+        ? setShowUserError(true)
+        : setShowEmailError(true);
       setShowProgress(false);
     }
   }
@@ -134,6 +115,8 @@ export default function Signup() {
       return;
     }
     setShowPasswordError(false);
+    setShowUserError(false);
+    setShowEmailError(false);
   };
 
   return (
@@ -228,6 +211,24 @@ export default function Signup() {
         >
           <Alert onClose={handlePasswordErrorClose} severity='error'>
             Your passwords do not match.
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={showEmailError}
+          autoHideDuration={6000}
+          onClose={handlePasswordErrorClose}
+        >
+          <Alert onClose={handlePasswordErrorClose} severity='error'>
+            That email address is already in use.
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={showUserError}
+          autoHideDuration={6000}
+          onClose={handlePasswordErrorClose}
+        >
+          <Alert onClose={handlePasswordErrorClose} severity='error'>
+            That username is not available.
           </Alert>
         </Snackbar>
       </Container>

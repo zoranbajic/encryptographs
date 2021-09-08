@@ -56,7 +56,8 @@ export default function Login() {
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
   const [showProgress, setShowProgress] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [showPasswordError, setShowPasswordError] = useState(false);
+  const [showConfirmationError, setShowConfirmationError] = useState(false);
   const [formInfo, setFormInfo] = useState({
     username: '',
     password: '',
@@ -83,6 +84,12 @@ export default function Login() {
         serverUrl
       );
 
+      // This is a check to see if the user has confirmed their email since
+      // listIncoming is not available for users who have not confirmed their
+      // email addresses
+      const invitationManager = etebase.getInvitationManager();
+      const invitations = await invitationManager.listIncoming();
+
       // Create encryption key to encrypt the session
       const RSAkey = cryptico.generateRSAKey(formInfoToSubmit.password, 186);
       const encryptionKey = cryptico.publicKeyString(RSAkey);
@@ -100,7 +107,11 @@ export default function Login() {
       });
       history.push('/albums');
     } catch (error) {
-      setShowError(true);
+      // Show the relevant error message
+      error.message ===
+      'Your email address needs to be confirmed before you can start using this service.'
+        ? setShowConfirmationError(true)
+        : setShowPasswordError(true);
     } finally {
       // Hide the progress dialog
       setShowProgress(false);
@@ -115,7 +126,8 @@ export default function Login() {
     if (reason === 'clickaway') {
       return;
     }
-    setShowError(false);
+    setShowPasswordError(false);
+    setShowConfirmationError(false);
   };
 
   return (
@@ -184,12 +196,21 @@ export default function Login() {
           <CircularProgress color='primary' />
         </Backdrop>
         <Snackbar
-          open={showError}
+          open={showPasswordError}
           autoHideDuration={6000}
           onClose={handleClose}
         >
           <Alert onClose={handleClose} severity='error'>
             Your username or password is incorrect.
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={showConfirmationError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity='error'>
+            Your email address needs to be confirmed before you can log in.
           </Alert>
         </Snackbar>
       </Container>
