@@ -6,7 +6,6 @@
   "https_only": true,
   "headers": {
     "/**": {
-      "Content-Security-Policy": "default-src 'self'; script-src 'self'; frame-ancestors 'none';",
       "Referrer-Policy": "no-referrer, strict-origin-when-cross-origin",
       "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
       "X-Content-Type-Options": "nosniff",
