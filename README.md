@@ -21,7 +21,7 @@ Encryptographs is an end-to-end encrypted single page app that allows users to s
 
 Once you've created an album and are ready share it with another user, click on the share button of that album view to open the Share dialog.
 
---- Show dialog opening --
+![Share dialog](https://github.com/zoranbajic/encryptographs/raw/main/src/assets/share_dialog.gif)
 
 Enter the username of the person you would like to send the invite to, select the level of access you would like them to have, and click on Send. There are three levels of access you can choose from:
 
@@ -32,20 +32,18 @@ Enter the username of the person you would like to send the invite to, select th
 
 If the username exists, you will see a message stating that the invite was successfully sent.
 
---- Show successfully sent snackbar
+![Invite sent](https://github.com/zoranbajic/encryptographs/raw/main/src/assets/invite_sent_success.gif)
 
 ## How to Accept a Share Invite
 
-
-
---- Show gif of clicking on the envelope icon and going to the invite view
-
 Click on the envelope icon to view your invites and then click on the profile image to view the public key of the user who sent the invite. Compare this with the public key of the user in-person, over a secure messenger app like [Signal](https://www.signal.org/), through encrypted email such as [ProtonMail](https://www.protonmail.com), etc. Once you've verified the public key, click on Accept to accept the invite. Once you navigate back to your albums you will then see the shared album.
+
+![Accept invite](https://github.com/zoranbajic/encryptographs/raw/main/src/assets/invite_accepted.gif)
 
 ## Technologies
 
 * Front-End
-	* React, React Hooks, Material UI, HTML & CSS
+	* React, React Hooks, Material UI
 * Back-End
 	* Node.js, Etebase
 * Libraries
