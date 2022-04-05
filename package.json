@@ -4,9 +4,10 @@
   "description": "Encryptographs is an end-to-end encrypted service that allows users to securely share photos with friends and family. It utilizes Etebase, an SDK developed by EteSync which ensures that users are in complete control of their data.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "test": "react-app-rewired test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -19,18 +20,28 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
     "cryptico": "^1.0.2",
-    "dotenv-webpack": "^7.0.2",
+    "crypto-browserify": "^3.12.0",
+    "dotenv-webpack": "^7.1.0",
     "env-cmd": "^10.1.0",
-    "etebase": "^0.43.0",
+    "etebase": "^0.43.1",
     "fontsource-roboto": "^4.0.0",
-    "js-base64": "^3.6.1",
-    "node-fetch": "^2.6.1",
+    "https-browserify": "^1.0.0",
+    "js-base64": "^3.7.2",
+    "node-fetch": "^3.2.1",
+    "os-browserify": "^0.3.0",
     "react": "^17.0.2",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^17.0.2",
-    "react-image-gallery": "^1.2.5",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3"
+    "react-image-gallery": "^1.2.7",
+    "react-router-dom": "^6.2.2",
+    "react-scripts": "^5.0.0",
+    "stream": "npm:stream-browserify",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.0"
   },
   "browserslist": {
     "production": [
@@ -45,14 +56,15 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/eslint-parser": "^7.13.10",
-    "@babel/preset-env": "^7.13.10",
-    "@babel/preset-react": "^7.12.13",
-    "eslint": "^7.22.0",
+    "@babel/core": "^7.17.5",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "eslint": "^8.10.0",
     "install": "^0.13.0",
-    "npm": "^7.6.3",
-    "sass": "^1.36.0",
-    "webpack-cli": "^4.5.0"
+    "npm": "^8.5.2",
+    "process": "^0.11.10",
+    "sass": "^1.49.9",
+    "webpack-cli": "^4.9.2"
   }
 }

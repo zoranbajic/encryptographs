@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DeleteDialog } from '.';
 import { Base64 } from 'js-base64';
 import ImageGallery from 'react-image-gallery';
@@ -53,14 +53,16 @@ function Alert(props) {
 export default function Gallery(props) {
   const classes = useStyles();
   const location = useLocation();
+  console.log('Your location state is', location.state);
   const { name } = location.state.albumMeta;
   const album = location.state.albumCollection;
+  console.log('Your album is', album);
   const [images, setImages] = useState([]);
   const [imageUids, setImageUids] = useState([]);
   let uidArray = [];
   const galleryRef = useRef();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
 
@@ -74,7 +76,7 @@ export default function Gallery(props) {
 
   // If the user is not logged in, send them to the login page
   if (!userSession) {
-    history.push('/login');
+    navigate('/login');
   } else {
   }
 

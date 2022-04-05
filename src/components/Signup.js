@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import { Footer } from '.';
 import {
@@ -59,7 +59,7 @@ export default function Signup() {
   const [showPasswordError, setShowPasswordError] = useState(false);
   const [showUserError, setShowUserError] = useState(false);
   const [showEmailError, setShowEmailError] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   async function Submit(evt) {
     let savedSession;
@@ -92,7 +92,7 @@ export default function Signup() {
           password: '',
           confirmPassword: '',
         });
-        history.push('/login');
+        navigate('/login');
       } else {
         setShowProgress(false);
         setShowPasswordError(true);

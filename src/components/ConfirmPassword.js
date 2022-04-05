@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import { Footer } from '.';
 import cryptico from 'cryptico';
@@ -59,7 +59,7 @@ export default function ConfirmPassword() {
     username: '',
     password: '',
   });
-  const history = useHistory();
+  const navigate = useNavigate();
 
   async function Submit(evt) {
     let currentUser;
@@ -86,7 +86,7 @@ export default function ConfirmPassword() {
       if (currentUser) {
         setUser(currentUser);
       } else {
-        history.push('/');
+        navigate('/');
       }
     }
   }

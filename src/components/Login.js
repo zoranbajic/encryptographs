@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useHistory, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import * as Etebase from 'etebase';
 import cryptico from 'cryptico';
 import { Footer } from '.';
@@ -62,7 +62,7 @@ export default function Login() {
     username: '',
     password: '',
   });
-  const history = useHistory();
+  const navigate = useNavigate();
 
   async function Submit(evt) {
     let savedSession;
@@ -105,7 +105,7 @@ export default function Login() {
         username: '',
         password: '',
       });
-      history.push('/albums');
+      navigate('/albums');
     } catch (error) {
       // Show the relevant error message
       error.message ===

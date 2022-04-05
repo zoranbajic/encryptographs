@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import * as Etebase from 'etebase';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { InviteContext, UserContext, UserSessionContext } from '../context';
 import { Footer, PublicKeyDialog } from '.';
 import { makeStyles } from '@material-ui/core/styles';
@@ -46,11 +46,11 @@ export default function InteractiveList() {
   const [user, setUser] = useContext(UserContext);
   const [userSession, setUserSession] = useContext(UserSessionContext);
   const [openPublicKeyDialog, setOpenPublicKeyDialog] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // If the user is not logged in, send them to the login page
   if (!userSession) {
-    history.push('/login');
+    navigate('/login');
   } else {
   }
 

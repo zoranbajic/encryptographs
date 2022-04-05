@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AlbumCard, AlbumDialog, Footer } from '.';
 import { UserContext, UserSessionContext } from '../context';
 import {
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Albums() {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   let albumCollections = '';
   let selectedValue = '';
   let album = {
@@ -68,7 +68,7 @@ export default function Albums() {
 
   // If the user is not logged in, send them to the login page
   if (!userSession) {
-    history.push('/login');
+    navigate('/login');
   } else {
   }
 

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
@@ -55,7 +55,7 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Pull in our state from Context
   const [user, setUser] = useContext(UserContext);
@@ -147,19 +147,19 @@ export default function Navbar() {
   async function Logout() {
     handleMenuClose();
     await user.logout();
-    history.push('/');
+    navigate('/');
     setUserSession('');
     setUser('');
   }
 
   function ChangePassword() {
     handleMenuClose();
-    history.push('/changepassword');
+    navigate('/changepassword');
   }
 
   function PublicKey() {
     handleMenuClose();
-    history.push('/publickey');
+    navigate('/publickey');
   }
 
   async function getInvites() {

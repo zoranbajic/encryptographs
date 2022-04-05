@@ -21,6 +21,7 @@ import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import EditOutlined from '@material-ui/icons/EditOutlined';
 import ShareIcon from '@material-ui/icons/Share';
 import MuiAlert from '@material-ui/lab/Alert';
+import { LocalPrintshopSharp } from '@material-ui/icons';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -163,12 +164,17 @@ export default function AlbumCard(props) {
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card className={classes.root}>
-        <CardActionArea
+        {/* <CardActionArea
           component={RouterLink}
           to={{
             pathname: '/gallery',
             state: { albumMeta: albumMeta, albumCollection: album },
           }}
+        > */}
+        <CardActionArea
+          component={RouterLink}
+          to={'/gallery'}
+          state={{ albumMeta: albumMeta, albumCollection: album }}
         >
           <CardHeader title={name} />
           <CardContent>
